@@ -53,6 +53,7 @@ secure_payloads=(500B_buyStocks_secure.xml 1K_buyStocks_secure.xml 5K_buyStocks_
 ei_host=172.30.2.239
 ei_ssh_host=ei
 backend_ssh_host=netty
+netty_port=9000
 # Test Duration in seconds
 test_duration=900
 # Warm-up time in minutes
@@ -104,7 +105,7 @@ do
                 mkdir -p $report_location
 
                 ssh $ei_ssh_host "./ei/ei-start.sh $product $heap_size"
-                ssh $backend_ssh_host "./netty-service/netty-start.sh $sleep_time"
+                ssh $backend_ssh_host "./netty-service/netty-start.sh $sleep_time $netty_port"
 
                 # Start remote JMeter servers
                 ssh $jmeter1_ssh_host "./jmeter/jmeter-server-start.sh $jmeter1_host"

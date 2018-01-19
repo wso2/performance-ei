@@ -141,6 +141,7 @@ secure_payloads | Payloads used for SecureProxy
 ei_host | The Enterprise Integrator IP
 ei_ssh_host | The ssh host for the API Manager node
 backend_ssh_host | The ssh host for the node with Netty HTTP Echo Service
+netty_port | The port of Netty HTTP Echo Service. Default: 9000
 test_duration | Duration of the test in seconds.
 warmup_time | The warmup time in minutes. This is used for JTL Splitter, which is from `performance-common`
 jmeter1_host | The hostname or IP of the JMeter Server 01
