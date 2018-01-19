@@ -87,7 +87,7 @@ write_server_metrics() {
 for proxy_type in ${proxy_types[@]}
 do
     payloads=("${request_payloads[@]}")
-    if [ $h = "SecureProxy" ]; then
+    if [[ $h = "SecureProxy" ]]; then
         payloads=("${secure_payloads[@]}")
     fi
     for payload in ${payloads[@]}
@@ -114,7 +114,7 @@ do
                 echo "# Running JMeter. Concurrent Users: $u Duration: $test_duration JVM Args: $JVM_ARGS"
                 jmeter -n -t ei-test.jmx -R $jmeter1_host,$jmeter2_host -X \
                     -Gusers=$u -Gduration=$test_duration -Ghost=$ei_host -Gpath=/services/$proxy_type \
-                    -Gpayload=${script_dir}/requests/${payload} \
+                    -Gpayload=$HOME/jmeter/requests/${payload} \
                     -Gprotocol=http -Gport=8280 -l ${report_location}/results.jtl
 
                 write_server_metrics jmeter
