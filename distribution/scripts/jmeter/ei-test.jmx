@@ -33,6 +33,10 @@
               <stringProp name="Header.value">urn:buyStocks</stringProp>
             </elementProp>
             <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">routing</stringProp>
+              <stringProp name="Header.value">xadmin;server1;community#1.0##</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Content-Type</stringProp>
               <stringProp name="Header.value">text/xml</stringProp>
             </elementProp>
