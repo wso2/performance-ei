@@ -88,7 +88,7 @@ write_server_metrics() {
 for proxy_type in ${proxy_types[@]}
 do
     payloads=("${request_payloads[@]}")
-    if [[ $h = "SecureProxy" ]]; then
+    if [[ $proxy_type == "SecureProxy" ]]; then
         payloads=("${secure_payloads[@]}")
     fi
     for payload in ${payloads[@]}
