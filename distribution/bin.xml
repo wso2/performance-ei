@@ -21,6 +21,30 @@
         <format>tar.gz</format>
     </formats>
 
+    <dependencySets>
+        <dependencySet>
+            <includes>
+                <include>org.wso2.performance.common:performance-common-distribution:tar.gz</include>
+            </includes>
+            <useStrictFiltering>true</useStrictFiltering>
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>java/**</exclude>
+                </excludes>
+            </unpackOptions>
+            <outputDirectory>.</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+
+    <files>
+        <file>
+            <source>../components/perftest-capp/target/EIPerformanceTestArtifacts-1.0.0.car</source>
+            <outputDirectory>ei/capp</outputDirectory>
+        </file>
+    </files>
+
     <fileSets>
         <fileSet>
             <directory>scripts</directory>

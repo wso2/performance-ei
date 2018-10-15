@@ -47,8 +47,20 @@
     </scm>
 
     <modules>
+        <module>components/perftest-capp</module>
         <module>distribution</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wso2.performance.common</groupId>
+                <artifactId>performance-common-distribution</artifactId>
+                <version>${performance.common.version}</version>
+                <type>tar.gz</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <profiles>
         <profile>
@@ -82,5 +94,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <performance.ei.version>0.1.0-SNAPSHOT</performance.ei.version>
+        <performance.common.version>0.1.1-SNAPSHOT</performance.common.version>
     </properties>
 </project>
