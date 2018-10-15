@@ -63,7 +63,7 @@ else
     # exit 1
 fi
 
-capp_file=$script_dir/capp/ESBPerformanceTestArtifacts_1.0.0.car
+capp_file=$script_dir/capp/EIPerformanceTestArtifacts-1.0.0.car
 
 if [ -f $capp_file ]; then
     echo "Deploying CAPP.."
@@ -73,16 +73,6 @@ else
    exit 1
 fi
 
-mkdir -p $product_path/repository/deployment/server/resources
-
-store_jks_file=$script_dir/resources/store.jks
-
-if [ -f $store_jks_file ]; then
-    echo "Copying $store_jks_file file"
-    mv $store_jks_file $product_path/repository/deployment/server/resources/
-else
-   echo "store.jks is not available."
-fi
 
 # Add Netty Host to /etc/hosts
 sudo -s <<EOF
