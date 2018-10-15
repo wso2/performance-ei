@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="proxy_wsdl" xmlns="http://ws.apache.org/ns/synapse">
+    <definitions name="EchoWSDL" targetNamespace="http://services.samples/xsd" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://services.samples/xsd" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <types>
+            <!--xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/newWSDL" xmlns:ns1="http://services.samples/xsd">
+            <xsd:import namespace="http://services.samples/xsd" schemaLocation="EchoSchema.xsd"/>
+        </xsd:schema-->
+            <xsd:schema elementFormDefault="unqualified" targetNamespace="http://services.samples/xsd">
+                <xsd:complexType name="BuyStocks">
+                    <xsd:sequence>
+                        <xsd:element name="order">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="symbol" type="xsd:string"/>
+                                    <xsd:element name="buyerID" type="xsd:string"/>
+                                    <xsd:element name="price" type="xsd:double"/>
+                                    <xsd:element name="volume" type="xsd:int"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+                <xsd:element name="buyStocks" type="tns:BuyStocks"/>
+            </xsd:schema>
+        </types>
+        <message name="EchoOperationRequest">
+            <part element="tns:buyStocks" name="parameters"/>
+        </message>
+        <message name="EchoOperationResponse">
+            <part element="tns:buyStocks" name="parameters"/>
+        </message>
+        <portType name="buyStocksPortType">
+            <operation name="buyStocksOperation">
+                <input message="tns:EchoOperationRequest" name="message"/>
+                <output message="tns:EchoOperationResponse" name="message"/>
+            </operation>
+            <operation name="buyStocksOperation1K">
+                <input message="tns:EchoOperationRequest" name="message1K"/>
+                <output message="tns:EchoOperationResponse" name="message1K"/>
+            </operation>
+            <operation name="buyStocksOperation5K">
+                <input message="tns:EchoOperationRequest" name="message5K"/>
+                <output message="tns:EchoOperationResponse" name="message5K"/>
+            </operation>
+            <operation name="buyStocksOperation10K">
+                <input message="tns:EchoOperationRequest" name="message10K"/>
+                <output message="tns:EchoOperationResponse" name="message10K"/>
+            </operation>
+            <operation name="buyStocksOperation100K">
+                <input message="tns:EchoOperationRequest" name="message100K"/>
+                <output message="tns:EchoOperationResponse" name="message100K"/>
+            </operation>
+            <operation name="buyStocksOperation500K">
+                <input message="tns:EchoOperationRequest" name="message500K"/>
+                <output message="tns:EchoOperationResponse" name="message500K"/>
+            </operation>
+            <operation name="buyStocksOperation1K1S">
+                <input message="tns:EchoOperationRequest" name="message1K1S"/>
+                <output message="tns:EchoOperationResponse" name="message1K1S"/>
+            </operation>
+            <operation name="buyStocksOperation5K1S">
+                <input message="tns:EchoOperationRequest" name="message5K1S"/>
+                <output message="tns:EchoOperationResponse" name="message5K1S"/>
+            </operation>
+            <operation name="buyStocksOperation10K1S">
+                <input message="tns:EchoOperationRequest" name="message10K1S"/>
+                <output message="tns:EchoOperationResponse" name="message10K1S"/>
+            </operation>
+            <operation name="buyStocksOperation100K1S">
+                <input message="tns:EchoOperationRequest" name="message100K1S"/>
+                <output message="tns:EchoOperationResponse" name="message100K1S"/>
+            </operation>
+            <operation name="buyStocksOperation500K1S">
+                <input message="tns:EchoOperationRequest" name="message500K1S"/>
+                <output message="tns:EchoOperationResponse" name="message500K1S"/>
+            </operation>
+            <operation name="buyStocksOperation1K5S">
+                <input message="tns:EchoOperationRequest" name="message1K5S"/>
+                <output message="tns:EchoOperationResponse" name="message1K5S"/>
+            </operation>
+            <operation name="buyStocksOperation5K5S">
+                <input message="tns:EchoOperationRequest" name="message5K5S"/>
+                <output message="tns:EchoOperationResponse" name="message5K5S"/>
+            </operation>
+            <operation name="buyStocksOperation10K5S">
+                <input message="tns:EchoOperationRequest" name="message10K5S"/>
+                <output message="tns:EchoOperationResponse" name="message10K5S"/>
+            </operation>
+            <operation name="buyStocksOperation100K5S">
+                <input message="tns:EchoOperationRequest" name="message100K5S"/>
+                <output message="tns:EchoOperationResponse" name="message100K5S"/>
+            </operation>
+            <operation name="buyStocksOperation500K5S">
+                <input message="tns:EchoOperationRequest" name="message500K5S"/>
+                <output message="tns:EchoOperationResponse" name="message500K5S"/>
+            </operation>
+        </portType>
+        <binding name="EchoServiceSOAP11Binding" type="tns:buyStocksPortType">
+            <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+            <operation name="buyStocksOperation">
+                <soap:operation soapAction="urn:buyStocks" style="document"/>
+                <input name="message">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation1K">
+                <soap:operation soapAction="urn:buyStocks.2" style="document"/>
+                <input name="message1K">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message1K">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation5K">
+                <soap:operation soapAction="urn:buyStocks.5" style="document"/>
+                <input name="message5K">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message5K">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation10K">
+                <soap:operation soapAction="urn:buyStocks.10" style="document"/>
+                <input name="message10K">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message10K">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation100K">
+                <soap:operation soapAction="urn:buyStocks.100" style="document"/>
+                <input name="message100K">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message100K">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation500K">
+                <soap:operation soapAction="urn:buyStocks.500" style="document"/>
+                <input name="message500K">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message500K">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation1K1S">
+                <soap:operation soapAction="urn:buyStocks.2.1" style="document"/>
+                <input name="message1K1S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message1K1S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation5K1S">
+                <soap:operation soapAction="urn:buyStocks.6.1" style="document"/>
+                <input name="message5K1S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message5K1S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation10K1S">
+                <soap:operation soapAction="urn:buyStocks.12.1" style="document"/>
+                <input name="message10K1S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message10K1S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation100K1S">
+                <soap:operation soapAction="urn:buyStocks.110.1" style="document"/>
+                <input name="message100K1S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message100K1S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation500K1S">
+                <soap:operation soapAction="urn:buyStocks.520.1" style="document"/>
+                <input name="message500K1S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message500K1S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation1K5S">
+                <soap:operation soapAction="urn:buyStocks.2.5" style="document"/>
+                <input name="message1K5S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message1K5S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation5K5S">
+                <soap:operation soapAction="urn:buyStocks.6.5" style="document"/>
+                <input name="message5K5S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message5K5S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation10K5S">
+                <soap:operation soapAction="urn:buyStocks.12.5" style="document"/>
+                <input name="message10K5S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message10K5S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation100K5S">
+                <soap:operation soapAction="urn:buyStocks.110.5" style="document"/>
+                <input name="message100K5S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message100K5S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+            <operation name="buyStocksOperation500K5S">
+                <soap:operation soapAction="urn:buyStocks.520.5" style="document"/>
+                <input name="message500K5S">
+                    <soap:body use="literal"/>
+                </input>
+                <output name="message500K5S">
+                    <soap:body use="literal"/>
+                </output>
+            </operation>
+        </binding>
+        <service name="EchoService">
+            <port binding="tns:EchoServiceSOAP11Binding" name="EchoServicePort">
+                <soap:address location="http://localhost:18181/EchoProxy"/>
+            </port>
+        </service>
+        <plnk:partnerLinkType name="EchoWSDL">
+            <!-- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes.
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+            <plnk:role name="EchoWSDLPortTypeRole" portType="tns:buyStocksPortType"/>
+        </plnk:partnerLinkType>
+    </definitions>
+</localEntry>
