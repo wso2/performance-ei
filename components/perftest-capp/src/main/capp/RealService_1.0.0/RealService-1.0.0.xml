@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <endpoint name="RealService" xmlns="http://ws.apache.org/ns/synapse">
-    <address uri="http://netty:9000/service/EchoService">
+    <address uri="http://netty:8688/service/EchoService">
         <timeout>
             <duration>30000</duration>
             <responseAction>fault</responseAction>
