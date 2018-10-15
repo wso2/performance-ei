@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="security_policy" xmlns="http://ws.apache.org/ns/synapse">
 <wsp:Policy wsu:Id="SigEncr"
             xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
     <wsp:ExactlyOne>
@@ -93,3 +95,4 @@
         </rampart:signatureCrypto>
     </rampart:RampartConfig>
 </wsp:Policy>
+</localEntry>
