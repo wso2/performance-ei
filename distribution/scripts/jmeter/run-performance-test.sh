@@ -17,9 +17,9 @@
 # Run Performance Tests for WSO2 Enterprise Integrator
 # ----------------------------------------------------------------------------
 
-product="wso2ei-6.3.0"
-ei_host=192.168.57.37
+product_version="6.4.0"
 ei_ssh_host=ei
+ei_host=$(get_ssh_hostname $ei_ssh_host)
 heap_size=2
 
 
@@ -89,13 +89,17 @@ declare -A test_scenario10=(
 function before_execute_test_scenario() {
     local service_path=${scenario[path]}
     local protocol=${scenario[protocol]}
+    local response_pattern="soapenv:Body"
+
+    jmeter_params+=("host=$ei_host" "path=$service_path" "response_pattern=${response_pattern}")
+    jmeter_params+=("response_size=${msize}B" "protocol=$protocol")
 
     if [[ "${scenario[name]}" == "SecureProxy" ]]; then
-        jmeter_params+=("host=$ei_host" "port=8243" "path=$service_path")
-        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks_secure.xml" "response_size=${msize}B" "protocol=$protocol")
+        jmeter_params+=("port=8243")
+        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks_secure.xml")
     else
-        jmeter_params+=("host=$ei_host" "port=8280" "path=$service_path")
-        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml" "response_size=${msize}B" "protocol=$protocol")
+        jmeter_params+=("port=8280")
+        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml")
     fi
 
     echo "Starting Enterprise Integrator..."
