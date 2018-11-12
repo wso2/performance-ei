@@ -68,17 +68,18 @@
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout">120000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">120000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
           <collectionProp name="Asserion.test_strings">
-            <stringProp name="49586">200</stringProp>
+            <stringProp name="2016352213">${__P(response_pattern)}</stringProp>
           </collectionProp>
-          <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+          <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
           <boolProp name="Assertion.assume_success">false</boolProp>
-          <intProp name="Assertion.test_type">8</intProp>
+          <intProp name="Assertion.test_type">16</intProp>
+          <stringProp name="Assertion.custom_message">Test failed!</stringProp>
         </ResponseAssertion>
         <hashTree/>
       </hashTree>
