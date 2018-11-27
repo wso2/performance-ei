@@ -29,11 +29,6 @@
             <useStrictFiltering>true</useStrictFiltering>
             <useProjectArtifact>false</useProjectArtifact>
             <unpack>true</unpack>
-            <unpackOptions>
-                <excludes>
-                    <exclude>java/**</exclude>
-                </excludes>
-            </unpackOptions>
             <outputDirectory>.</outputDirectory>
         </dependencySet>
     </dependencySets>
