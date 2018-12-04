@@ -184,6 +184,7 @@ heap_size=2
 # Test scenarios
 declare -A test_scenario0=(
     [name]="DirectProxy"
+    [display_name]="DirectProxy"
     [path]="/services/DirectProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
     [protocol]="http"
@@ -192,6 +193,7 @@ declare -A test_scenario0=(
 )
 declare -A test_scenario1=(
     [name]="CBRProxy"
+    [display_name]="CBRProxy"
     [path]="/services/CBRProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
     [protocol]="http"
@@ -200,6 +202,7 @@ declare -A test_scenario1=(
 )
 declare -A test_scenario2=(
     [name]="CBRSOAPHeaderProxy"
+    [display_name]="CBRSOAPHeaderProxy"
     [path]="/services/CBRSOAPHeaderProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
     [protocol]="http"
@@ -208,6 +211,7 @@ declare -A test_scenario2=(
 )
 declare -A test_scenario3=(
     [name]="CBRTransportHeaderProxy"
+    [display_name]="CBRTransportHeaderProxy"
     [path]="/services/CBRTransportHeaderProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
     [protocol]="http"
@@ -216,6 +220,7 @@ declare -A test_scenario3=(
 )
 declare -A test_scenario4=(
     [name]="SecureProxy"
+    [display_name]="SecureProxy"
     [path]="/services/SecureProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
     [protocol]="https"
@@ -224,6 +229,7 @@ declare -A test_scenario4=(
 )
 declare -A test_scenario5=(
     [name]="XSLTEnhancedProxy"
+    [display_name]="XSLTEnhancedProxy"
     [path]="/services/XSLTEnhancedProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
     [protocol]="http"
@@ -232,11 +238,12 @@ declare -A test_scenario5=(
 )
 declare -A test_scenario10=(
     [name]="XSLTProxy"
+    [display_name]="XSLTProxy"
     [path]="/services/XSLTProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
     [protocol]="http"
     [use_backend]=true
-    [skip]=true
+    [skip]=false
 )
 
 # Verifying if payloads for each message size exists in the 'requests' directory
