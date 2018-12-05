@@ -27,6 +27,7 @@ export script_dir=$(dirname "$0")
 export netty_host=""
 export ei_product=""
 export user=""
+export oracle_jdk_dist=""
 # Default value for product extraction directory
 export product_home="wso2ei"
 
@@ -34,6 +35,7 @@ function usageHelp() {
     echo "-n: The hostname of Netty Service."
     echo "-d: EI distribution zip name. Example: ei-distribution.zip"
     echo "-u: General user of the OS."
+    echo "-j: Oracle JDK distribution. (If not provided, OpenJDK will be installed)"
 }
 export -f usageHelp
 
@@ -47,6 +49,9 @@ while getopts "gp:w:o:hn:d:u:" opt; do
         ;;
     u)
         user=${OPTARG}
+        ;;
+    d)
+        oracle_jdk_dist=${OPTARG}
         ;;
     h)
         usageHelp
@@ -95,6 +100,11 @@ validate_command unzip unzip
 function setup() {
     export product_path="$HOME/$ei_product"
     export product_name="Enterprise Integrator"
+
+    if [[ -f $oracle_jdk_dist ]]; then
+        echo "Installing Oracle JDK from $oracle_jdk_dist"
+        $script_dir/../java/install-java.sh -f $oracle_jdk_dist
+    fi
 
     if ! ls $product_path 1> /dev/null 2>&1; then
         echo "Please download the $product_name to $HOME"
@@ -146,4 +156,8 @@ function setup() {
 }
 export -f setup
 
-$script_dir/../setup/setup-common.sh "${opts[@]}" "$@"
+if [[ ! -f $oracle_jdk_dist ]]; then
+    SETUP_COMMON_ARGS+="-p openjdk-8-jdk"
+fi
+
+$script_dir/../setup/setup-common.sh "${opts[@]}" "$@" $SETUP_COMMON_ARGS
