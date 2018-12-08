@@ -34,7 +34,7 @@ default_test_name="ei-performance-test"
 test_name="$default_test_name"
 default_key_name="ei-perf-test"
 key_name="$default_key_name"
-default_s3_bucket_name="eiperformancetest"
+default_s3_bucket_name="ei-performance-test"
 s3_bucket_name="$default_s3_bucket_name"
 default_s3_bucket_region="us-east-1"
 s3_bucket_region="$default_s3_bucket_region"
@@ -369,8 +369,6 @@ create_stack_command="aws cloudformation create-stack --stack-name $stack_name \
     ParameterKey=EIDistributionName,ParameterValue=$ei_product_distribution_filename \
     ParameterKey=JMeterDistributionName,ParameterValue=$jmeter_distribution_filename \
     ParameterKey=OracleJDKDistributionName,ParameterValue=$oracle_jdk_distribution_filename \
-    ParameterKey=MasterUsername,ParameterValue=$master_username \
-    ParameterKey=MasterUserPassword,ParameterValue=$master_user_password \
     ParameterKey=OSUser,ParameterValue=$os_user \
     ParameterKey=JMeterClientInstanceType,ParameterValue=$jmeter_client_ec2_instance_type \
     ParameterKey=JMeterServerInstanceType,ParameterValue=$jmeter_server_ec2_instance_type \

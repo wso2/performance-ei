@@ -16,18 +16,18 @@
 # ----------------------------------------------------------------------------
 # Start WSO2 Enterprise Integrator
 # ----------------------------------------------------------------------------
+
+default_heap_size="4G"
+heap_size="$default_heap_size"
+
 function usageHelp() {
-    echo "-p: Product name."
-    echo "-s: Heap size."
+    echo "-m: Heap memory size. Default value: $default_heap_size"
 }
 export -f usageHelp
 
-while getopts "p:s:h" opts; do
+while getopts "m:h" opts; do
     case $opts in
-    p)
-        product=${OPTARG}
-        ;;
-    s)
+    m)
         heap_size=${OPTARG}
         ;;
     h)
@@ -43,12 +43,9 @@ done
 shift "$((OPTIND - 1))"
 
 function validate() {
-    if [[ -z $product ]]; then
-        product=wso2ei
-    fi
-
     if [[ -z $heap_size ]]; then
-        heap_size="4"
+        echo "Please provide the heap size for the EI program."
+        exit 1
     fi
 }
 validate
@@ -60,10 +57,10 @@ done
 export JAVA_HOME="${jvm_dir}"
 
 carbon_bootstrap_class=org.wso2.carbon.bootstrap.Bootstrap
-product_path=$HOME/$product
+product_path=$HOME/wso2ei
 startup_script=$product_path/bin/integrator.sh
 
-if [ ! -e $startup_script ]; then
+if [[ ! -f $startup_script ]]; then
     startup_script=$product_path/bin/wso2server.sh
 fi
 
@@ -72,12 +69,12 @@ if pgrep -f "$carbon_bootstrap_class" > /dev/null; then
     $startup_script stop
 fi
 
-echo "Waiting for $product to stop"
+echo "Waiting for EI to stop"
 
 while true
 do
     if ! pgrep -f "$carbon_bootstrap_class" > /dev/null; then
-        echo "$product stopped"
+        echo "EI stopped"
         break
     else
         sleep 10
@@ -90,8 +87,8 @@ if [ ${#log_files[@]} -gt 1 ]; then
     mv $product_path/repository/logs/* /tmp/;
 fi
 
-echo "Setting Heap to ${heap_size}GB"
-export JVM_MEM_OPTS="-Xms${heap_size}G -Xmx${heap_size}G"
+echo "Setting Heap to ${heap_size}"
+export JVM_MEM_OPTS="-Xms${heap_size} -Xmx${heap_size}"
 
 echo "Enabling GC Logs"
 export JAVA_OPTS="-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:$product_path/repository/logs/gc.log"
@@ -99,14 +96,14 @@ export JAVA_OPTS="-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xlogg
 echo "Starting EI"
 $startup_script start
 
-echo "Waiting for $product to start"
+echo "Waiting for EI to start"
 
-while true 
+while true
 do
     # Check Version service
     response_code="$(curl -sk -w "%{http_code}" -o /dev/null https://localhost:8243/services/Version)"
     if [ $response_code -eq 200 ]; then
-        echo "$product started"
+        echo "EI started"
         break
     else
         sleep 10

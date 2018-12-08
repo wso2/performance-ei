@@ -33,13 +33,13 @@ export product_home="wso2ei"
 
 function usageHelp() {
     echo "-n: The hostname of Netty Service."
-    echo "-d: EI distribution zip name. Example: ei-distribution.zip"
+    echo "-d: EI distribution."
     echo "-u: General user of the OS."
     echo "-j: Oracle JDK distribution. (If not provided, OpenJDK will be installed)"
 }
 export -f usageHelp
 
-while getopts "gp:w:o:hn:d:u:" opt; do
+while getopts "gp:w:o:hn:d:u:j:" opt; do
     case "${opt}" in
     n)
         netty_host=${OPTARG}
@@ -50,7 +50,7 @@ while getopts "gp:w:o:hn:d:u:" opt; do
     u)
         user=${OPTARG}
         ;;
-    d)
+    j)
         oracle_jdk_dist=${OPTARG}
         ;;
     h)
@@ -98,44 +98,31 @@ validate_command() {
 validate_command unzip unzip
 
 function setup() {
-    export product_path="$HOME/$ei_product"
     export product_name="Enterprise Integrator"
+    install_directory=/home/$user
 
     if [[ -f $oracle_jdk_dist ]]; then
         echo "Installing Oracle JDK from $oracle_jdk_dist"
         $script_dir/../java/install-java.sh -f $oracle_jdk_dist
     fi
 
-    if ! ls $product_path 1> /dev/null 2>&1; then
-        echo "Please download the $product_name to $HOME"
+    if ! ls $ei_product 1> /dev/null 2>&1; then
+        echo "Please download the $product_name to $install_directory"
         exit 1
     fi
 
     if [[ ! -d $product_path ]]; then
         echo "Extracting product $product"
-        sudo -u $user unzip -q -o $product_path -d $HOME
-
-        # Renaming the extracted EI directory to $product_home
-        current_dir=$(pwd)
-        cd $HOME
-        for z in wso2ei-*; do
-            if [ -d "$z" ]; then
-                sudo -u $user mv $z $product_home;
-            fi
-        done
-        for z in wso2esb-*; do
-            if [ -d "$z" ]; then
-                sudo -u $user mv $z $product_home;
-            fi
-        done
-        cd $current_dir
-
+        sudo -u $user unzip -q -o $ei_product -d $install_directory
+        pushd ${install_directory}
+        sudo -u $user mv wso2e* wso2ei
+        popd
         echo "$product_name is extracted"
     else
         echo "$product_name is already extracted"
     fi
 
-    product_path="$HOME/$product_home"
+    product_path="$install_directory/$product_home"
 
     # Sample CAPP location
     capp_file=$script_dir/../ei/capp/EIPerformanceTestArtifacts-1.0.0.car
@@ -160,4 +147,4 @@ if [[ ! -f $oracle_jdk_dist ]]; then
     SETUP_COMMON_ARGS+="-p openjdk-8-jdk"
 fi
 
-$script_dir/../setup/setup-common.sh "${opts[@]}" "$@" $SETUP_COMMON_ARGS
+$script_dir/../setup/setup-common.sh "${opts[@]}" "$@" SETUP_COMMON_ARGS -p curl -p jq -p unzip

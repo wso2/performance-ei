@@ -19,15 +19,15 @@
 # ----------------------------------------------------------------------------
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  AWS CloudFormation Template to run EI Performance Tests. This template
-  creates Amazon EC2 instance in a VPC. The JMeter Client EC2 instance will be in a
+  AWS CloudFormation Template to run EI performance tests. This template
+  creates Amazon EC2 instances in a VPC. The JMeter Client EC2 instance will be in a
   public subnet with a public IP. All other EC2 instances will be in a private subnet.
   **WARNING** This template creates multiple Amazon AWS resources. You will be
   billed for the AWS resources used if you create a stack from this template.
 ##############################################################################################
 # Mappings for Ubuntu AMIs.
 # Refer https://cloud-images.ubuntu.com/locator/ec2/ for ubuntu AMI-ID's for the LTS version
-# Search using "bionic us- hvm:ebs-ssd"
+# Search using "bionic us- hvm:ebs-ssd amd64"
 ##############################################################################################
 Mappings:
   AWSRegion2AMI:
@@ -38,7 +38,7 @@ Mappings:
     us-west-1:
       AMI: ami-09c5eca75eed8245a
     us-west-2:
-      AMI: ami-0221842fe3a17b6ed
+      AMI: ami-0f05ad41860678734
 #############################
 # User inputs
 #############################
@@ -258,20 +258,6 @@ Resources:
         - ':'
         - - 'PrivateSubnet'
           - !Ref TestName
-  PrivateSubnet2:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      VpcId: !Ref VPC
-      AvailabilityZone: !Select
-      - 1
-      - Fn::GetAZs: !Ref 'AWS::Region'
-      CidrBlock: 10.0.2.0/24
-      Tags:
-      - Key: Name
-        Value: !Join
-        - ':'
-        - - 'PrivateSubnet2'
-          - !Ref TestName
   NatGateway:
     Type: 'AWS::EC2::NatGateway'
     DependsOn: AttachGateway
@@ -313,11 +299,6 @@ Resources:
     Properties:
       SubnetId: !Ref PrivateSubnet
       RouteTableId: !Ref PrivateRouteTable
-  PrivateSubnet2RouteTableAssociation:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      SubnetId: !Ref PrivateSubnet2
-      RouteTableId: !Ref PrivateRouteTable
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -335,15 +316,6 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Init':
         config:
-          sources:
-            /home/ubuntu: !Join
-            - ''
-            - - 'https://s3.'
-              -  !Ref BucketRegion
-              - '.amazonaws.com/'
-              - !Ref BucketName
-              - /
-              - !Ref PerformanceEIDistributionName
           files:
             /etc/awslogs/awslogs.conf:
               content: !Sub |
@@ -388,6 +360,19 @@ Resources:
               mode: '000444'
               owner: root
               group: root
+            /home/ubuntu/performance-distribution.tar.gz:
+              source: !Join
+              - ''
+              - - 'https://s3.'
+                - !Ref BucketRegion
+                - '.amazonaws.com/'
+                - !Ref BucketName
+                - /
+                - !Ref PerformanceEIDistributionName
+              mode: '000664'
+              owner: ubuntu
+              group: ubuntu
+              authentication: "S3AccessCreds"
             /home/ubuntu/private_key.pem:
               source: !Join
               - ''
@@ -488,6 +473,8 @@ Resources:
           ln -s aws-cfn-bootstrap-latest/init/ubuntu/cfn-hup /etc/init.d/cfn-hup
           # Initialize
           /usr/local/bin/cfn-init -v --stack ${AWS::StackId} --resource JMeterClientInstance --region ${AWS::Region}
+          # Extract distribution
+          tar xzf /home/ubuntu/performance-distribution.tar.gz -C /home/ubuntu
           # Must run setup script in User Data (Commands executed within cfn-init do not show the progress in logs)
           /home/ubuntu/setup/setup-jmeter-client.sh -g -k /home/ubuntu/private_key.pem \
             -i /home/ubuntu \
@@ -508,15 +495,6 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Init':
         config:
-          sources:
-            /home/ubuntu: !Join
-            - ''
-            - - 'https://s3.'
-              -  !Ref BucketRegion
-              - '.amazonaws.com/'
-              - !Ref BucketName
-              - /
-              - !Ref PerformanceEIDistributionName
           files:
             /etc/awslogs/awslogs.conf:
               content: !Sub |
@@ -561,6 +539,19 @@ Resources:
               mode: '000444'
               owner: root
               group: root
+            /home/ubuntu/performance-distribution.tar.gz:
+              source: !Join
+              - ''
+              - - 'https://s3.'
+                - !Ref BucketRegion
+                - '.amazonaws.com/'
+                - !Ref BucketName
+                - /
+                - !Ref PerformanceEIDistributionName
+              mode: '000664'
+              owner: ubuntu
+              group: ubuntu
+              authentication: "S3AccessCreds"
             /home/ubuntu/private_key.pem:
               source: !Join
               - ''
@@ -657,6 +648,8 @@ Resources:
           ln -s aws-cfn-bootstrap-latest/init/ubuntu/cfn-hup /etc/init.d/cfn-hup
           # Initialize
           /usr/local/bin/cfn-init -v --stack ${AWS::StackId} --resource JMeterServer1Instance --region ${AWS::Region}
+          # Extract distribution
+          tar xzf /home/ubuntu/performance-distribution.tar.gz -C /home/ubuntu
           # Run setup
           /home/ubuntu/setup/setup-jmeter.sh -g -i /home/ubuntu -d /home/ubuntu/jdk-8-linux-x64.tar.gz -f /home/ubuntu/apache-jmeter.tgz
           # Signal
@@ -670,15 +663,6 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Init':
         config:
-          sources:
-            /home/ubuntu: !Join
-            - ''
-            - - 'https://s3.'
-              -  !Ref BucketRegion
-              - '.amazonaws.com/'
-              - !Ref BucketName
-              - /
-              - !Ref PerformanceEIDistributionName
           files:
             /etc/awslogs/awslogs.conf:
               content: !Sub |
@@ -723,6 +707,19 @@ Resources:
               mode: '000444'
               owner: root
               group: root
+            /home/ubuntu/performance-distribution.tar.gz:
+              source: !Join
+              - ''
+              - - 'https://s3.'
+                - !Ref BucketRegion
+                - '.amazonaws.com/'
+                - !Ref BucketName
+                - /
+                - !Ref PerformanceEIDistributionName
+              mode: '000664'
+              owner: ubuntu
+              group: ubuntu
+              authentication: "S3AccessCreds"
             /home/ubuntu/private_key.pem:
               source: !Join
               - ''
@@ -819,6 +816,8 @@ Resources:
           ln -s aws-cfn-bootstrap-latest/init/ubuntu/cfn-hup /etc/init.d/cfn-hup
           # Initialize
           /usr/local/bin/cfn-init -v --stack ${AWS::StackId} --resource JMeterServer2Instance --region ${AWS::Region}
+          # Extract distribution
+          tar xzf /home/ubuntu/performance-distribution.tar.gz -C /home/ubuntu
           # Run setup
           /home/ubuntu/setup/setup-jmeter.sh -g -i /home/ubuntu -d /home/ubuntu/jdk-8-linux-x64.tar.gz -f /home/ubuntu/apache-jmeter.tgz
           # Signal
@@ -832,15 +831,9 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Init':
         config:
-          sources:
-            /home/ubuntu: !Join
-            - ''
-            - - 'https://s3.'
-              -  !Ref BucketRegion
-              - '.amazonaws.com/'
-              - !Ref BucketName
-              - /
-              - !Ref PerformanceEIDistributionName
+          packages:
+            apt:
+              unzip: []
           files:
             /etc/awslogs/awslogs.conf:
               content: !Sub |
@@ -885,6 +878,19 @@ Resources:
               mode: '000444'
               owner: root
               group: root
+            /home/ubuntu/performance-distribution.tar.gz:
+              source: !Join
+              - ''
+              - - 'https://s3.'
+                - !Ref BucketRegion
+                - '.amazonaws.com/'
+                - !Ref BucketName
+                - /
+                - !Ref PerformanceEIDistributionName
+              mode: '000664'
+              owner: ubuntu
+              group: ubuntu
+              authentication: "S3AccessCreds"
             /home/ubuntu/private_key.pem:
               source: !Join
               - ''
@@ -981,8 +987,10 @@ Resources:
           ln -s aws-cfn-bootstrap-latest/init/ubuntu/cfn-hup /etc/init.d/cfn-hup
           # Initialize
           /usr/local/bin/cfn-init -v --stack ${AWS::StackId} --resource EIInstance --region ${AWS::Region}
+          # Extract distribution
+          tar xzf /home/ubuntu/performance-distribution.tar.gz -C /home/ubuntu
           # Run setup
-          /home/ubuntu/ei/setup.sh -d ei-distribution.zip -n ${BackendInstance.PrivateIp} -u ubuntu
+          /home/ubuntu/ei/setup.sh -d /home/ubuntu/ei-distribution.zip -n ${BackendInstance.PrivateIp} -u ubuntu -j /home/ubuntu/jdk-8-linux-x64.tar.gz
           # Signal
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource EIInstance --region ${AWS::Region}
     CreationPolicy:
@@ -994,15 +1002,6 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Init':
         config:
-          sources:
-            /home/ubuntu: !Join
-            - ''
-            - - 'https://s3.'
-              -  !Ref BucketRegion
-              - '.amazonaws.com/'
-              - !Ref BucketName
-              - /
-              - !Ref PerformanceEIDistributionName
           files:
             /etc/awslogs/awslogs.conf:
               content: !Sub |
@@ -1047,6 +1046,19 @@ Resources:
               mode: '000444'
               owner: root
               group: root
+            /home/ubuntu/performance-distribution.tar.gz:
+              source: !Join
+              - ''
+              - - 'https://s3.'
+                - !Ref BucketRegion
+                - '.amazonaws.com/'
+                - !Ref BucketName
+                - /
+                - !Ref PerformanceEIDistributionName
+              mode: '000664'
+              owner: ubuntu
+              group: ubuntu
+              authentication: "S3AccessCreds"
             /home/ubuntu/private_key.pem:
               source: !Join
               - ''
@@ -1130,6 +1142,9 @@ Resources:
           ln -s aws-cfn-bootstrap-latest/init/ubuntu/cfn-hup /etc/init.d/cfn-hup
           # Initialize
           /usr/local/bin/cfn-init -v --stack ${AWS::StackId} --resource BackendInstance --region ${AWS::Region}
+          # Extract distribution
+          tar xzf /home/ubuntu/performance-distribution.tar.gz -C /home/ubuntu
+          chown -R ubuntu /home/ubuntu/netty-service
           # Run setup
           /home/ubuntu/setup/setup-netty.sh -g -d /home/ubuntu/jdk-8-linux-x64.tar.gz
           # Signal

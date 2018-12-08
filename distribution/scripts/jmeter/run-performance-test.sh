@@ -17,15 +17,14 @@
 # Run Performance Tests for WSO2 Enterprise Integrator
 # ----------------------------------------------------------------------------
 script_dir=$(dirname "$0")
+# Execute common script
+. $script_dir/perf-test-common.sh
 
 # Postfix symbol for message size (B = bytes)
 payload_size_postfix="B"
 
 # Message Sizes in bytes for sample payloads
-default_message_sizes="500 1024 5120 10240 102400 512000"
-
-# Execute common script
-. $script_dir/perf-test-common.sh
+available_message_sizes="500 1024 5120 10240 102400 512000"
 
 function initialize() {
     export ei_ssh_host=ei
@@ -35,8 +34,6 @@ export -f initialize
 
 # Default product name
 product=wso2ei
-# Default heap size
-heap_size=2
 
 # Test scenarios
 declare -A test_scenario0=(
@@ -105,10 +102,10 @@ declare -A test_scenario10=(
 
 # Verifying if payloads for each message size exists in the 'requests' directory
 function verifyRequestPayloads() {
-    for i in $default_message_sizes
+    for i in $available_message_sizes
     do
         i+=$payload_size_postfix
-        if ! ls requests/$i* 1> /dev/null 2>&1; then
+        if ! ls $HOME/jmeter/requests/$i* 1> /dev/null 2>&1; then
             echo "Test payload for size: $i is missing"
             exit 1
         fi
@@ -133,11 +130,13 @@ function before_execute_test_scenario() {
     fi
 
     echo "Starting Enterprise Integrator..."
-    ssh $ei_ssh_host "./ei/ei-start.sh -p $product -s $heap_size"
+    ssh $ei_ssh_host "./ei/ei-start.sh -m $heap"
 }
 
 function after_execute_test_scenario() {
     write_server_metrics ei $ei_ssh_host carbon
+    download_file $ei_ssh_host wso2ei/repository/logs/wso2carbon.log wso2carbon.log
+    download_file $ei_ssh_host wso2ei/repository/logs/gc.log ei_gc.log
 }
 
 test_scenarios
