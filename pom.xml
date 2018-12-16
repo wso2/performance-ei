@@ -49,6 +49,7 @@
     <modules>
         <module>components/perftest-capp</module>
         <module>distribution</module>
+        <module>cloudformation</module>
     </modules>
 
     <dependencyManagement>
@@ -94,6 +95,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <performance.ei.version>0.1.0-SNAPSHOT</performance.ei.version>
-        <performance.common.version>0.1.1-SNAPSHOT</performance.common.version>
+        <performance.common.version>0.2.1-SNAPSHOT</performance.common.version>
     </properties>
 </project>

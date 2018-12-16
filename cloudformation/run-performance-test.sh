@@ -341,6 +341,9 @@ aws --region $s3_bucket_region s3 ls --summarize s3://$s3_bucket_name
 
 cd $script_dir
 
+echo "Creating AWS Cloudformation template..."
+$results_dir/cloudformation/create-template.py --template-name ei_perf_test_cfn.yaml --jmeter-servers 2 --output-name ei_perf_test_cfn.yaml
+
 echo "Validating stack..."
 # Validate stack first
 aws cloudformation validate-template --template-body file://ei_perf_test_cfn.yaml
@@ -365,11 +368,10 @@ create_stack_command="aws cloudformation create-stack --stack-name $stack_name \
     ParameterKey=KeyName,ParameterValue=$key_name \
     ParameterKey=BucketName,ParameterValue=$s3_bucket_name \
     ParameterKey=BucketRegion,ParameterValue=$s3_bucket_region \
-    ParameterKey=PerformanceEIDistributionName,ParameterValue=$ei_performance_distribution_filename \
-    ParameterKey=EIDistributionName,ParameterValue=$ei_product_distribution_filename \
+    ParameterKey=PerformanceDistributionName,ParameterValue=$ei_performance_distribution_filename \
+    ParameterKey=EIInstallerName,ParameterValue=$ei_product_distribution_filename \
     ParameterKey=JMeterDistributionName,ParameterValue=$jmeter_distribution_filename \
     ParameterKey=OracleJDKDistributionName,ParameterValue=$oracle_jdk_distribution_filename \
-    ParameterKey=OSUser,ParameterValue=$os_user \
     ParameterKey=JMeterClientInstanceType,ParameterValue=$jmeter_client_ec2_instance_type \
     ParameterKey=JMeterServerInstanceType,ParameterValue=$jmeter_server_ec2_instance_type \
     ParameterKey=EIInstanceType,ParameterValue=$ei_ec2_instance_type \

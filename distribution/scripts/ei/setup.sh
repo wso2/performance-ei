@@ -39,7 +39,7 @@ function usageHelp() {
 }
 export -f usageHelp
 
-while getopts "gp:w:o:hn:d:u:j:" opt; do
+while getopts "hn:d:u:j:" opt; do
     case "${opt}" in
     n)
         netty_host=${OPTARG}
@@ -83,19 +83,6 @@ validate() {
     fi
 }
 export -f validate
-
-validate_command() {
-    # Check whether given command exists
-    # $1 is the command name
-    # $2 is the package containing command
-    if ! command -v $1 >/dev/null 2>&1; then
-        echo "Please install $2 (sudo apt -y install $2)"
-        exit 1
-    fi
-}
-
-# Validate commands
-validate_command unzip unzip
 
 function setup() {
     export product_name="Enterprise Integrator"
@@ -147,4 +134,4 @@ if [[ ! -f $oracle_jdk_dist ]]; then
     SETUP_COMMON_ARGS+="-p openjdk-8-jdk"
 fi
 
-$script_dir/../setup/setup-common.sh "${opts[@]}" "$@" SETUP_COMMON_ARGS -p curl -p jq -p unzip
+$script_dir/../setup/setup-common.sh "${opts[@]}" "$@" -p curl -p jq -p unzip SETUP_COMMON_ARGS
