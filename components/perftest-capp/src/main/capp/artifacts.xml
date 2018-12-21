@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="ESBPerformanceTestArtifacts" version="1.0.0" type="carbon/application">
+        <dependency artifact="xslt_transform" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="xslt_transform_reverse" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="proxy_wsdl" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="security_policy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="fastxslt_transform" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="fastxslt_transform_reverse" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="RealService" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="CBRProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="CBRSOAPHeaderProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="CBRTransportHeaderProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="DirectProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="SecureProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="XSLTEnhancedProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="XSLTProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+    </artifact>
+</artifacts>

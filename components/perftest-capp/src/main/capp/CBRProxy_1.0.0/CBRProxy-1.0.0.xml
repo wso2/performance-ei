@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="CBRProxy" startOnLoad="true" transports="https http" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <filter regex="IBM" source="//order[1]/symbol" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <then>
+                    <send>
+                        <endpoint key="RealService"/>
+                    </send>
+                </then>
+                <else>
+                    <makefault version="soap11">
+                        <code value="soap11Env:Server" xmlns:soap11Env="http://schemas.xmlsoap.org/soap/envelope/"/>
+                        <reason value="First order must be for the symbol IBM"/>
+                    </makefault>
+                    <header action="remove" name="To" scope="default"/>
+                    <property name="RESPONSE" scope="default" type="STRING" value="true"/>
+                    <send/>
+                </else>
+            </filter>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </target>
+    <publishWSDL key="proxy_wsdl"/>
+</proxy>
