@@ -1,4 +1,4 @@
-# Enterprise Integrator Performance Test Results
+# WSO2 Enterprise Integrator Performance Test Results
 
 During each release, we execute various automated performance test scenarios and publish the results.
 
@@ -12,7 +12,7 @@ Our test client is [Apache JMeter](https://jmeter.apache.org/index.html). We tes
 time. We split the test results into warmup and measurement parts and use the measurement part to compute the
 performance metrics.
 
-A majority of test scenarios use a [Netty](https://netty.io/) based back-end service which echoes back any request
+Test scenarios use a [Netty](https://netty.io/) based back-end service which echoes back any request
 posted to it after a specified period of time.
 
 We run the performance tests under different numbers of concurrent users, message sizes (payloads) and back-end service
@@ -20,8 +20,8 @@ delays.
 
 The main performance metrics:
 
-1. **Throughput**: The number of requests that the EI service processes during a specific time interval (e.g. per second).
-2. **Response Time**: The end-to-end latency for an operation of invoking an EI service. The complete distribution of response times was recorded.
+1. **Throughput**: The number of requests that the WSO2 Enterprise Integrator processes during a specific time interval (e.g. per second).
+2. **Response Time**: The end-to-end latency for an operation of invoking a service in WSO2 Enterprise Integrator. The complete distribution of response times was recorded.
 
 In addition to the above metrics, we measure the load average and several memory-related metrics.
 
@@ -38,7 +38,7 @@ The following are the test parameters.
 The duration of each test is **{{ parameters.test_duration }} seconds**. The warm-up period is **{{ parameters.warmup_time }} seconds**.
 The measurement results are collected after the warm-up period.
 
-A [**{{ parameters.ei_ec2_instance_type }}** Amazon EC2 instance](https://aws.amazon.com/ec2/instance-types/) was used to install EI.
+A [**{{ parameters.wso2ei_ec2_instance_type }}** Amazon EC2 instance](https://aws.amazon.com/ec2/instance-types/) was used to install EI.
 
 The following are the measurements collected from each performance test conducted for a given combination of
 test parameters.

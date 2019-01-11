@@ -1,20 +1,22 @@
-#!/bin/bash
-# Copyright 2018 WSO2 Inc. (http://wso2.org)
+#!/bin/bash -e
+# Copyright (c) 2018, WSO2 Inc. (http://wso2.org) All Rights Reserved.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# WSO2 Inc. licenses this file to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
 #
 # ----------------------------------------------------------------------------
-# Run Performance Tests for WSO2 Enterprise Integrator
+# Run WSO2 Enterprise Integrator Performance Tests
 # ----------------------------------------------------------------------------
 script_dir=$(dirname "$0")
 # Execute common script
@@ -24,16 +26,26 @@ script_dir=$(dirname "$0")
 payload_size_postfix="B"
 
 # Message Sizes in bytes for sample payloads
-available_message_sizes="500 1024 5120 10240 102400 512000"
+available_message_sizes=("500 1024 5120 10240 102400 512000")
+
+# Verifying if payloads for each message size exists in the 'requests' directory
+function verifyRequestPayloads() {
+    for i in ${available_message_sizes[@]}; do
+        i+=$payload_size_postfix
+        if ! ls $HOME/jmeter/requests/$i* 1>/dev/null 2>&1; then
+            echo "Test payload for size: $i is missing"
+            exit 1
+        fi
+    done
+}
+export -f verifyRequestPayloads
 
 function initialize() {
+    verifyRequestPayloads
     export ei_ssh_host=ei
     export ei_host=$(get_ssh_hostname $ei_ssh_host)
 }
 export -f initialize
-
-# Default product name
-product=wso2ei
 
 # Test scenarios
 declare -A test_scenario0=(
@@ -99,19 +111,6 @@ declare -A test_scenario10=(
     [use_backend]=true
     [skip]=false
 )
-
-# Verifying if payloads for each message size exists in the 'requests' directory
-function verifyRequestPayloads() {
-    for i in $available_message_sizes
-    do
-        i+=$payload_size_postfix
-        if ! ls $HOME/jmeter/requests/$i* 1> /dev/null 2>&1; then
-            echo "Test payload for size: $i is missing"
-            exit 1
-        fi
-    done
-}
-verifyRequestPayloads
 
 function before_execute_test_scenario() {
     local service_path=${scenario[path]}
