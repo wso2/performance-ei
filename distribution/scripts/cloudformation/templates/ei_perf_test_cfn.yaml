@@ -59,7 +59,7 @@
 # EI
 {% call ec2instance('WSO2EnterpriseIntegratorInstance', 'ei', '!Ref WSO2EnterpriseIntegratorInstanceType',
   files=[{'name': 'wso2ei.zip', 'ref': 'WSO2EnterpriseIntegratorDistributionName'}, {'name': 'jdk-8-linux-x64.tar.gz', 'ref': 'OracleJDKDistributionName'}]) -%}
-/home/ubuntu/ei/setup.sh -d /home/ubuntu/wso2ei.zip -n ${BackendInstance.PrivateIp} -u ubuntu -j /home/ubuntu/jdk-8-linux-x64.tar.gz
+/home/ubuntu/setup/setup-ei.sh -d /home/ubuntu/wso2ei.zip -n ${BackendInstance.PrivateIp} -u ubuntu -j /home/ubuntu/jdk-8-linux-x64.tar.gz
 {%- endcall %}
 # Backend
 {% call ec2instance('BackendInstance', 'backend', '!Ref BackendInstanceType',
