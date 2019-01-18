@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 # Copyright 2018 WSO2 Inc. (http://wso2.org)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -99,8 +99,9 @@ function setup() {
 
     #Extract the downloaded zip
     echo "Extracting WSO2 Enterprise Integrator"
+    dirname=$(unzip -Z -1 $ei_product | head -1 | sed -e 's@/.*@@')
     sudo -u $user unzip -q -o $ei_product
-    sudo -u $user mv -v wso2e* wso2ei
+    sudo -u $user mv -v $dirname wso2ei
     echo "Enterprise Integrator is extracted"
 
     # Sample CAPP location
