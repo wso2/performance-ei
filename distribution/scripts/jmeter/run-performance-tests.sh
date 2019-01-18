@@ -22,26 +22,23 @@ script_dir=$(dirname "$0")
 # Execute common script
 . $script_dir/perf-test-common.sh
 
-# Postfix symbol for message size (B = bytes)
-payload_size_postfix="B"
-
 # Message Sizes in bytes for sample payloads
 available_message_sizes=("500 1024 5120 10240 102400 512000")
 
 # Verifying if payloads for each message size exists in the 'requests' directory
 function verifyRequestPayloads() {
-    for i in ${available_message_sizes[@]}; do
-        i+=$payload_size_postfix
-        if ! ls $HOME/jmeter/requests/$i* 1>/dev/null 2>&1; then
-            echo "Test payload for size: $i is missing"
+    for i in "$@"; do
+        if ! ls $script_dir/requests/${i}B_buyStocks*.xml 1>/dev/null 2>&1; then
+            echo "ERROR: Payload file for $i bytes is missing!"
             exit 1
         fi
     done
 }
-export -f verifyRequestPayloads
+
+verifyRequestPayloads "${available_message_sizes[@]}"
+verifyRequestPayloads "${message_sizes_array[@]}"
 
 function initialize() {
-    verifyRequestPayloads
     export ei_ssh_host=ei
     export ei_host=$(get_ssh_hostname $ei_ssh_host)
 }
