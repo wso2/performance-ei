@@ -23,7 +23,7 @@ script_dir=$(dirname "$0")
 . $script_dir/perf-test-common.sh
 
 # Message Sizes in bytes for sample payloads
-available_message_sizes=("500 1024 5120 10240 102400 512000")
+declare -a available_message_sizes=("500" "1024" "5120" "10240" "102400" "512000")
 
 # Verifying if payloads for each message size exists in the 'requests' directory
 function verifyRequestPayloads() {
