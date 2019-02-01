@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 # Copyright 2018 WSO2 Inc. (http://wso2.org)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,12 +67,12 @@ shift "$((OPTIND - 1))"
 
 # Validating input parameters
 validate() {
-    if [[ -z  $netty_host  ]]; then
+    if [[ -z $netty_host ]]; then
         echo "Please provide netty host."
         exit 1
     fi
 
-    if [[ -z $ei_product ]]; then
+    if [[ ! -f $ei_product ]]; then
         echo "Product not provided. Please provide the EI product."
         exit 1
     fi
@@ -85,48 +85,42 @@ validate() {
 export -f validate
 
 function setup() {
-    export product_name="Enterprise Integrator"
-    install_directory=/home/$user
-
+    install_dir=/home/$user
     if [[ -f $oracle_jdk_dist ]]; then
-        echo "Installing Oracle JDK from $oracle_jdk_dist"
         $script_dir/../java/install-java.sh -f $oracle_jdk_dist
     fi
 
-    if ! ls $ei_product 1> /dev/null 2>&1; then
-        echo "Please download the $product_name to $install_directory"
-        exit 1
+    pushd ${install_dir}
+
+    #Remove Enterprise Integrator if it is already there
+    if [[ -d wso2ei ]]; then
+        sudo -u $user rm -rf wso2ei
     fi
 
-    if [[ ! -d $product_path ]]; then
-        echo "Extracting product $product"
-        sudo -u $user unzip -q -o $ei_product -d $install_directory
-        pushd ${install_directory}
-        sudo -u $user mv wso2e* wso2ei
-        popd
-        echo "$product_name is extracted"
-    else
-        echo "$product_name is already extracted"
-    fi
-
-    product_path="$install_directory/$product_home"
+    #Extract the downloaded zip
+    echo "Extracting WSO2 Enterprise Integrator"
+    dirname=$(unzip -Z -1 $ei_product | head -1 | sed -e 's@/.*@@')
+    sudo -u $user unzip -q -o $ei_product
+    sudo -u $user mv -v $dirname wso2ei
+    echo "Enterprise Integrator is extracted"
 
     # Sample CAPP location
     capp_file=$script_dir/../ei/capp/EIPerformanceTestArtifacts-1.0.0.car
 
     if [ -f $capp_file ]; then
         echo "Deploying CAPP.."
-        sudo -u $user cp $capp_file $product_path/repository/deployment/server/carbonapps/
+        sudo -u $user cp -v $capp_file wso2ei/repository/deployment/server/carbonapps/
         echo "CAPP Deployed.."
     else
-       echo "CAPP is not available."
-       exit 1
+        echo "CAPP is not available."
+        exit 1
     fi
 
     # Add Netty Host to /etc/hosts
-    echo "$netty_host netty" >> /etc/hosts
+    echo "$netty_host netty" >>/etc/hosts
 
-    echo "Completed.."
+    popd
+    echo "Completed Enterprise Integrator setup..."
 }
 export -f setup
 
