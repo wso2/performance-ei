@@ -19,8 +19,43 @@
 # Run WSO2 Enterprise Integrator Performance Tests
 # ----------------------------------------------------------------------------
 script_dir=$(dirname "$0")
+
+ARGS=()
+for var in "$@"; do
+    # Ignore ei profile,num of cpu arguments for common script
+    [ "$var" != '-P' ] && [ "$var" != '-c' ] && ARGS+=("$var")
+done
+
 # Execute common script
-. $script_dir/perf-test-common.sh
+. $script_dir/perf-test-common.sh "${ARGS[@]}"
+
+wso2ei_profile_type="ei"
+num_of_cpus=""
+
+function usageHelp() {
+    echo "-P: Heap memory size. Default value: $default_heap_size"
+    echo "-c: Number of cpus allocated. Default value: $num_of_cpus"
+}
+export -f usageHelp
+
+while getopts "P:c:h" opts; do
+    case $opts in
+    P)
+        wso2ei_profile_type=${OPTARG}
+        ;;
+    c)
+        num_of_cpus=${OPTARG}
+        ;;
+    h)
+        usageHelp
+        exit 0
+        ;;
+    *)
+        usageHelp
+        exit 1
+        ;;
+    esac
+done
 
 # Message Sizes in bytes for sample payloads
 declare -a available_message_sizes=("500" "1024" "5120" "10240" "102400" "512000")
@@ -124,15 +159,25 @@ function before_execute_test_scenario() {
         jmeter_params+=("port=8280")
         jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml")
     fi
-
-    echo "Starting Enterprise Integrator..."
-    ssh $ei_ssh_host "./ei/ei-start.sh -m $heap"
+    if [ "$wso2ei_profile_type" == "microei" ]; then
+        echo "Starting Enterprise Micro Integrator..."
+        ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $num_of_cpus"
+    else
+        echo "Starting Enterprise Integrator..."
+        ssh $ei_ssh_host "./ei/ei-start.sh -m $heap"
+    fi
 }
 
 function after_execute_test_scenario() {
+    ssh $ei_ssh_host "./ei/microei-stop.sh"
     write_server_metrics ei $ei_ssh_host carbon
-    download_file $ei_ssh_host wso2ei/repository/logs/wso2carbon.log wso2carbon.log
-    download_file $ei_ssh_host wso2ei/repository/logs/gc.log ei_gc.log
+    if [ "${wso2ei_profile_type}" == "microei" ]; then
+        download_file $ei_ssh_host logs/wso2carbon.log wso2carbon.log
+        download_file $ei_ssh_host logs/gc.log ei_gc.log
+    else
+        download_file $ei_ssh_host wso2ei/repository/logs/wso2carbon.log wso2carbon.log
+        download_file $ei_ssh_host wso2ei/repository/logs/gc.log ei_gc.log
+    fi
 }
 
 test_scenarios

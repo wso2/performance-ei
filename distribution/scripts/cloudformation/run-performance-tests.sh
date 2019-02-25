@@ -24,6 +24,7 @@ export script_dir=$(dirname "$0")
 
 export wso2ei_distribution=""
 export wso2ei_ec2_instance_type=""
+export wso2ei_profile_type="ei"
 
 function usageCommand() {
     echo "-e <wso2ei_distribution> -E <wso2ei_ec2_instance_type>"
@@ -45,6 +46,9 @@ while getopts ":u:f:d:k:n:j:o:g:s:b:r:J:S:N:t:p:w:he:E:" opt; do
     E)
         wso2ei_ec2_instance_type=${OPTARG}
         ;;
+    P)
+        wso2ei_profile_type=${OPTARG}
+        ;;
     *)
         opts+=("-${opt}")
         [[ -n "$OPTARG" ]] && opts+=("$OPTARG")
@@ -55,14 +59,21 @@ shift "$((OPTIND - 1))"
 
 function validate() {
     if [[ ! -f $wso2ei_distribution ]]; then
-        echo "Please provide WSO2 Enterprise Integrator distribution."
+        if [ "$wso2ei_profile_type" == "microei" ]; then
+            echo "Please provide WSO2 Enterprise Micro Integrator docker image."
+        else
+            echo "Please provide WSO2 Enterprise Integrator distribution."
+        fi
         exit 1
     fi
 
     export wso2ei_distribution_filename=$(basename $wso2ei_distribution)
 
-    if [[ ${wso2ei_distribution_filename: -4} != ".zip" ]]; then
+    if [[ ${wso2ei_distribution_filename: -4} != ".zip" ]] && ["$wso2ei_profile_type" == "ei" ]; then
         echo "WSO2 Enterprise Integrator distribution must have .zip extension"
+        exit 1
+    elif [[ ${wso2ei_distribution_filename: -4} != ".docker" ]] && ["$wso2ei_profile_type" == "microei" ]; then
+        echo "WSO2 Enterprise Micro Integrator docker image must have .docker extension"
         exit 1
     fi
 
@@ -81,12 +92,14 @@ export -f create_links
 
 function get_test_metadata() {
     echo "wso2ei_ec2_instance_type=$wso2ei_ec2_instance_type"
+    echo "wso2ei_profile_type"=$wso2ei_profile_type
 }
 export -f get_test_metadata
 
 function get_cf_parameters() {
     echo "WSO2EnterpriseIntegratorDistributionName=$wso2ei_distribution_filename"
     echo "WSO2EnterpriseIntegratorInstanceType=$wso2ei_ec2_instance_type"
+    echo "WSO2EnterpriseIntegratorProfileType"=$wso2ei_profile_type
 }
 export -f get_cf_parameters
 
@@ -105,8 +118,11 @@ function get_columns() {
     echo "Average WSO2 Enterprise Integrator Memory Footprint After Full GC (M)"
 }
 export -f get_columns
-
-export aws_cloudformation_template_filename="ei_perf_test_cfn.yaml"
+aws_cloudformation_template_filename="ei_perf_test_cfn.yaml"
+if [[ $wso2ei_profile_type == "microei" ]]; then
+    aws_cloudformation_template_filename="microei_perf_test_cfn.yaml"
+fi
+export aws_cloudformation_template_filename
 export application_name="WSO2 Enterprise Integrator"
 export metrics_file_prefix="ei"
 

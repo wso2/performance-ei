@@ -1,4 +1,4 @@
-# WSO2 Enterprise Integrator Performance Test Results
+# WSO2 Enterprise {% if parameters.wso2ei_profile_type == 'microei' %} Micro {% endif%}Integrator Performance Test Results
 
 During each release, we execute various automated performance test scenarios and publish the results.
 
@@ -20,8 +20,8 @@ delays.
 
 The main performance metrics:
 
-1. **Throughput**: The number of requests that the WSO2 Enterprise Integrator processes during a specific time interval (e.g. per second).
-2. **Response Time**: The end-to-end latency for an operation of invoking a service in WSO2 Enterprise Integrator. The complete distribution of response times was recorded.
+1. **Throughput**: The number of requests that the WSO2 Enterprise {% if parameters.wso2ei_profile_type == 'microei' %} Micro {% endif%}Integrator processes during a specific time interval (e.g. per second).
+2. **Response Time**: The end-to-end latency for an operation of invoking a service in WSO2 Enterprise {% if parameters.wso2ei_profile_type == 'microei' %} Micro {% endif%} Integrator. The complete distribution of response times was recorded.
 
 In addition to the above metrics, we measure the load average and several memory-related metrics.
 
