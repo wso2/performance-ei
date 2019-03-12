@@ -37,7 +37,7 @@ function usageHelp() {
 }
 export -f usageHelp
 
-while getopts ":f:d:k:n:j:o:g:s:b:r:J:S:N:t:p:w:he:E:" opt; do
+while getopts ":u:f:d:k:n:j:o:g:s:b:r:J:S:N:t:p:w:he:E:" opt; do
     case "${opt}" in
     e)
         wso2ei_distribution=${OPTARG}
