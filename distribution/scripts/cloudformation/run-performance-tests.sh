@@ -99,7 +99,6 @@ export -f get_test_metadata
 function get_cf_parameters() {
     echo "WSO2EnterpriseIntegratorDistributionName=$wso2ei_distribution_filename"
     echo "WSO2EnterpriseIntegratorInstanceType=$wso2ei_ec2_instance_type"
-    echo "WSO2EnterpriseIntegratorProfileType"=$wso2ei_profile_type
 }
 export -f get_cf_parameters
 
