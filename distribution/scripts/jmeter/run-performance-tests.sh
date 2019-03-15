@@ -31,6 +31,7 @@ done
 
 wso2ei_profile_type="ei"
 num_of_cpus=""
+version=""
 
 function usageHelp() {
     echo "-P: Heap memory size. Default value: $default_heap_size"
@@ -38,13 +39,16 @@ function usageHelp() {
 }
 export -f usageHelp
 
-while getopts "P:c:h" opts; do
+while getopts "P:c:v:h" opts; do
     case $opts in
     P)
         wso2ei_profile_type=${OPTARG}
         ;;
     c)
         num_of_cpus=${OPTARG}
+        ;;
+    v)
+        version=${OPTARG}
         ;;
     h)
         usageHelp
@@ -161,7 +165,7 @@ function before_execute_test_scenario() {
     fi
     if [ "$wso2ei_profile_type" == "microei" ]; then
         echo "Starting Enterprise Micro Integrator..."
-        ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $num_of_cpus"
+        ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $num_of_cpus -v $version"
     else
         echo "Starting Enterprise Integrator..."
         ssh $ei_ssh_host "./ei/ei-start.sh -m $heap"

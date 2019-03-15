@@ -19,6 +19,7 @@
 default_heap_size="4G"
 heap_size="$default_heap_size"
 cpu_num="0.5"
+version="6.4.0"
 export script_dir=$(dirname "$0")
 
 function usageHelp() {
@@ -35,6 +36,9 @@ while getopts "m:c:h" opts; do
         ;;
     c)
         cpu_num=${OPTARG}
+        ;;
+    v)
+        version=${OPTARG}
         ;;
     h)
         usageHelp
@@ -66,7 +70,7 @@ echo "Setting Heap to ${heap_size}"
 JVM_MEM_OPTS="JVM_MEM_OPTS=-Xms${heap_size} -Xmx${heap_size}"
 
 echo "Enabling GC Logs"
-JAVA_OPTS="JAVA_OPTS=-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/home/wso2carbon/wso2ei-6.4.0/wso2/micro-integrator/repository/logs/gc.log"
+JAVA_OPTS="JAVA_OPTS=-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/repository/logs/gc.log"
 
 if [[ ! -d ${HOME}/logs ]]; then
     mkdir ${HOME}/logs
@@ -83,11 +87,11 @@ carbon_bootstrap_class=org.wso2.carbon.bootstrap.Bootstrap
 capp_dir=$script_dir/../ei/capp/
 echo "Starting the docker container"
 sudo docker run -d -p 8280:8280 -p 8243:8243 --network="host" --cpus=${cpu_num} \
---volume $(readlink -f $capp_dir):/home/wso2carbon/wso2ei-6.4.0/wso2/micro-integrator/repository/deployment/server/carbonapps \
---volume ${HOME}/carbon.xml:/home/wso2carbon/wso2ei-6.4.0/wso2/micro-integrator/conf/carbon.xml \
---volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-6.4.0/wso2/micro-integrator/repository/logs/wso2carbon.log \
---volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-6.4.0/wso2/micro-integrator/repository/logs/gc.log \
--e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2ei-micro-integrator:6.4.0
+--volume $(readlink -f $capp_dir):/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/repository/deployment/server/carbonapps \
+--volume ${HOME}/carbon.xml:/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/conf/carbon.xml \
+--volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/repository/logs/wso2carbon.log \
+--volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/repository/logs/gc.log \
+-e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2ei-micro-integrator:${version}
 
 echo "Waiting for EI to start"
 sleep 40
