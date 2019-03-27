@@ -59,7 +59,7 @@ shift "$((OPTIND - 1))"
 
 function validate() {
     if [[ ! -f $wso2ei_distribution ]]; then
-        if [ "$wso2ei_profile_type" == "microei" ]; then
+        if [[ "$wso2ei_profile_type" == "microei" ]]; then
             echo "Please provide WSO2 Enterprise Micro Integrator docker image."
         else
             echo "Please provide WSO2 Enterprise Integrator distribution."
@@ -69,10 +69,10 @@ function validate() {
 
     export wso2ei_distribution_filename=$(basename $wso2ei_distribution)
 
-    if [[ ${wso2ei_distribution_filename: -4} != ".zip" ]] && ["$wso2ei_profile_type" == "ei" ]; then
+    if [[ ${wso2ei_distribution_filename: -4} != ".zip" ]] && [[ "$wso2ei_profile_type" == "ei" ]]; then
         echo "WSO2 Enterprise Integrator distribution must have .zip extension"
         exit 1
-    elif [[ ${wso2ei_distribution_filename: -4} != ".docker" ]] && ["$wso2ei_profile_type" == "microei" ]; then
+    elif [[ ${wso2ei_distribution_filename##*.} != "docker" ]] && [[ "$wso2ei_profile_type" == "microei" ]]; then
         echo "WSO2 Enterprise Micro Integrator docker image must have .docker extension"
         exit 1
     fi

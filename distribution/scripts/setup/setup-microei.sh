@@ -83,6 +83,23 @@ validate() {
 }
 export -f validate
 
+function createNettyIPFile() {
+    current_dir=$PWD
+    nettyIPfile=$PWD/nettyIP.txt
+    if [ -f "$nettyIPfile" ]
+    then
+        rm $nettyIPfile
+        touch $nettyIPfile
+        echo "$netty_host" > "$nettyIPfile"
+    else
+        touch $nettyIPfile
+        echo "$netty_host" > "$nettyIPfile"
+    fi
+    cd $current_dir
+}
+
+createNettyIPFile
+
 function setup() {
     if command -v docker >/dev/null 2>&1; then
 #       sudo docker pull docker.wso2.com/wso2ei-micro-integrator:6.4.0

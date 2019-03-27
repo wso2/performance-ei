@@ -60,6 +60,10 @@ function validate() {
 }
 validate
 
+sudo ./docker/install-docker.sh
+sudo docker load -i wso2ei_micro_integrator_image.docker
+nettyIP=$(sudo cat nettyIP.txt)
+
 jvm_dir=""
 for dir in /usr/lib/jvm/jdk1.8*; do
     [ -d "${dir}" ] && jvm_dir="${dir}" && break
@@ -82,13 +86,20 @@ else
     echo -n > ${HOME}/logs/gc.log
 fi
 
+current_dir=$PWD
+cd ei/
+chmod o+r capp
+cd ../logs/
+chmod o+w wso2carbon.log
+chmod o+w gc.log
+cd $current_dir
+
 carbon_bootstrap_class=org.wso2.carbon.bootstrap.Bootstrap
 # Sample CAPP location
 capp_dir=$script_dir/../ei/capp/
 echo "Starting the docker container"
-sudo docker run -d -p 8280:8280 -p 8243:8243 --network="host" --cpus=${cpu_num} \
+sudo docker run -d -p 8280:8290 -p 8243:8253 -p 8688:8688 --add-host=netty:$nettyIP --cpus=${cpu_num} \
 --volume $(readlink -f $capp_dir):/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/repository/deployment/server/carbonapps \
---volume ${HOME}/carbon.xml:/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/conf/carbon.xml \
 --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/repository/logs/wso2carbon.log \
 --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-${version}/wso2/micro-integrator/repository/logs/gc.log \
 -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2ei-micro-integrator:${version}
@@ -99,7 +110,7 @@ sleep 40
 exit_status=100
 n=0
 until [ $n -ge 60 ]; do
-    response_code=$(curl -sk -w "%{http_code}" -o /dev/null http://localhost:8280/echo)
+    response_code=$(curl -v -w '%{http_code}' -o /dev/null -X POST -d '<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Body><p:echoInt xmlns:p="http://echo.services.core.carbon.wso2.org"><in>1</in></p:echoInt></soapenv:Body></soapenv:Envelope>' -H 'Content-Type: application/soap+xml; charset=UTF-8; action="urn:echoInt"' http://localhost:8280/services/echo)
     if [ $response_code -eq 200 ]; then
         echo "EI started"
         exit_status=0
