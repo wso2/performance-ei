@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api xmlns="http://ws.apache.org/ns/synapse" name="EchoApi" context="/echo" version-type="context">
+    <resource methods="GET" url-mapping="/*" faultSequence="fault">
+        <inSequence>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+    </resource>
+</api>
