@@ -14,5 +14,6 @@
         <dependency artifact="SecureProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="XSLTEnhancedProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="XSLTProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="EchoApi" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
     </artifact>
 </artifacts>
