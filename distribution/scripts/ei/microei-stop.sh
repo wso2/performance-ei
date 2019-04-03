@@ -16,8 +16,10 @@
 # ----------------------------------------------------------------------------
 # Stop WSO2 Enterprise Micro Integrator
 # ----------------------------------------------------------------------------
-container_id=$(sudo docker ps -q)
-if [ -n "$container_id" ]; then
-   echo "Stopping docker container: $container_id"
-   sudo docker stop ${container_id}
+container_id=$(docker ps -f name=microei -q)
+if [[ -n "$container_id" ]]; then
+    echo "Stopping docker container: $container_id"
+    docker stop ${container_id}
+    echo "Removing docker container: $container_id"
+    docker rm ${container_id}
 fi

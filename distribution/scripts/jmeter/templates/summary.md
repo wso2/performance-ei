@@ -1,4 +1,4 @@
-# WSO2 Enterprise {% if parameters.wso2ei_profile_type == 'microei' %} Micro {% endif%}Integrator Performance Test Results
+# {{ parameters.application_name }} Performance Test Results
 
 During each release, we execute various automated performance test scenarios and publish the results.
 
