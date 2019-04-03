@@ -22,9 +22,14 @@
 export script_name="$0"
 export script_dir=$(dirname "$0")
 
+export aws_cloudformation_template_filename="microei_perf_test_cfn.yaml"
+export application_name="WSO2 Enterprise Micro Integrator"
+export ec2_instance_name="ei"
+export metrics_file_prefix="ei"
+export run_performance_tests_script_name="run-micro-ei-performance-tests.sh"
+
 export wso2ei_distribution=""
 export wso2ei_ec2_instance_type=""
-export wso2ei_profile_type="ei"
 
 function usageCommand() {
     echo "-e <wso2ei_distribution> -E <wso2ei_ec2_instance_type>"
@@ -32,9 +37,8 @@ function usageCommand() {
 export -f usageCommand
 
 function usageHelp() {
-    echo "-e: WSO2 Enterprise Integrator Distribution."
-    echo "-E: Amazon EC2 Instance Type for WSO2 Enterprise Integrator."
-
+    echo "-e: $application_name docker image."
+    echo "-E: Amazon EC2 Instance Type for $application_name."
 }
 export -f usageHelp
 
@@ -46,9 +50,6 @@ while getopts ":u:f:d:k:n:j:o:g:s:b:r:J:S:N:t:p:w:he:E:" opt; do
     E)
         wso2ei_ec2_instance_type=${OPTARG}
         ;;
-    P)
-        wso2ei_profile_type=${OPTARG}
-        ;;
     *)
         opts+=("-${opt}")
         [[ -n "$OPTARG" ]] && opts+=("$OPTARG")
@@ -59,26 +60,19 @@ shift "$((OPTIND - 1))"
 
 function validate() {
     if [[ ! -f $wso2ei_distribution ]]; then
-        if [[ "$wso2ei_profile_type" == "microei" ]]; then
-            echo "Please provide WSO2 Enterprise Micro Integrator docker image."
-        else
-            echo "Please provide WSO2 Enterprise Integrator distribution."
-        fi
+        echo "Please provide $application_name docker image."
         exit 1
     fi
 
     export wso2ei_distribution_filename=$(basename $wso2ei_distribution)
 
-    if [[ ${wso2ei_distribution_filename: -4} != ".zip" ]] && [[ "$wso2ei_profile_type" == "ei" ]]; then
-        echo "WSO2 Enterprise Integrator distribution must have .zip extension"
-        exit 1
-    elif [[ ${wso2ei_distribution_filename##*.} != "docker" ]] && [[ "$wso2ei_profile_type" == "microei" ]]; then
-        echo "WSO2 Enterprise Micro Integrator docker image must have .docker extension"
+    if [[ ${wso2ei_distribution_filename: -7} != ".docker" ]]; then
+        echo "$application_name docker image must have .docker extension."
         exit 1
     fi
 
     if [[ -z $wso2ei_ec2_instance_type ]]; then
-        echo "Please provide the Amazon EC2 Instance Type for WSO2 Enterprise Integrator."
+        echo "Please provide the Amazon EC2 Instance Type for $application_name."
         exit 1
     fi
 }
@@ -92,7 +86,6 @@ export -f create_links
 
 function get_test_metadata() {
     echo "wso2ei_ec2_instance_type=$wso2ei_ec2_instance_type"
-    echo "wso2ei_profile_type"=$wso2ei_profile_type
 }
 export -f get_test_metadata
 
@@ -113,16 +106,9 @@ function get_columns() {
     echo "Average Response Time (ms)"
     echo "Standard Deviation of Response Time (ms)"
     echo "99th Percentile of Response Time (ms)"
-    echo "WSO2 Enterprise Integrator GC Throughput (%)"
-    echo "Average WSO2 Enterprise Integrator Memory Footprint After Full GC (M)"
+    echo "$application_name GC Throughput (%)"
+    echo "Average $application_name Memory Footprint After Full GC (M)"
 }
 export -f get_columns
-aws_cloudformation_template_filename="ei_perf_test_cfn.yaml"
-if [[ $wso2ei_profile_type == "microei" ]]; then
-    aws_cloudformation_template_filename="microei_perf_test_cfn.yaml"
-fi
-export aws_cloudformation_template_filename
-export application_name="WSO2 Enterprise Integrator"
-export metrics_file_prefix="ei"
 
 $script_dir/cloudformation-common.sh "${opts[@]}" -- "$@"

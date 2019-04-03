@@ -16,50 +16,8 @@
 # under the License.
 #
 # ----------------------------------------------------------------------------
-# Run WSO2 Enterprise Integrator Performance Tests
+# Performance Test Scenarios
 # ----------------------------------------------------------------------------
-script_dir=$(dirname "$0")
-
-ARGS=()
-for var in "$@"; do
-    # Ignore ei profile,num of cpu arguments for common script
-    [ "$var" != '-P' ] && [ "$var" != '-c' ] && ARGS+=("$var")
-done
-
-# Execute common script
-. $script_dir/perf-test-common.sh "${ARGS[@]}"
-
-wso2ei_profile_type="ei"
-num_of_cpus=""
-version=""
-
-function usageHelp() {
-    echo "-P: Heap memory size. Default value: $default_heap_size"
-    echo "-c: Number of cpus allocated. Default value: $num_of_cpus"
-}
-export -f usageHelp
-
-while getopts "P:c:v:h" opts; do
-    case $opts in
-    P)
-        wso2ei_profile_type=${OPTARG}
-        ;;
-    c)
-        num_of_cpus=${OPTARG}
-        ;;
-    v)
-        version=${OPTARG}
-        ;;
-    h)
-        usageHelp
-        exit 0
-        ;;
-    *)
-        usageHelp
-        exit 1
-        ;;
-    esac
-done
 
 # Message Sizes in bytes for sample payloads
 declare -a available_message_sizes=("500" "1024" "5120" "10240" "102400" "512000")
@@ -76,12 +34,6 @@ function verifyRequestPayloads() {
 
 verifyRequestPayloads "${available_message_sizes[@]}"
 verifyRequestPayloads "${message_sizes_array[@]}"
-
-function initialize() {
-    export ei_ssh_host=ei
-    export ei_host=$(get_ssh_hostname $ei_ssh_host)
-}
-export -f initialize
 
 # Test scenarios
 declare -A test_scenario0=(
@@ -147,41 +99,3 @@ declare -A test_scenario10=(
     [use_backend]=true
     [skip]=false
 )
-
-function before_execute_test_scenario() {
-    local service_path=${scenario[path]}
-    local protocol=${scenario[protocol]}
-    local response_pattern="soapenv:Body"
-
-    jmeter_params+=("host=$ei_host" "path=$service_path" "response_pattern=${response_pattern}")
-    jmeter_params+=("response_size=${msize}B" "protocol=$protocol")
-
-    if [[ "${scenario[name]}" == "SecureProxy" ]]; then
-        jmeter_params+=("port=8243")
-        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks_secure.xml")
-    else
-        jmeter_params+=("port=8280")
-        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml")
-    fi
-    if [ "$wso2ei_profile_type" == "microei" ]; then
-        echo "Starting Enterprise Micro Integrator..."
-        ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $num_of_cpus -v $version"
-    else
-        echo "Starting Enterprise Integrator..."
-        ssh $ei_ssh_host "./ei/ei-start.sh -m $heap"
-    fi
-}
-
-function after_execute_test_scenario() {
-    ssh $ei_ssh_host "./ei/microei-stop.sh"
-    write_server_metrics ei $ei_ssh_host carbon
-    if [ "${wso2ei_profile_type}" == "microei" ]; then
-        download_file $ei_ssh_host logs/wso2carbon.log wso2carbon.log
-        download_file $ei_ssh_host logs/gc.log ei_gc.log
-    else
-        download_file $ei_ssh_host wso2ei/repository/logs/wso2carbon.log wso2carbon.log
-        download_file $ei_ssh_host wso2ei/repository/logs/gc.log ei_gc.log
-    fi
-}
-
-test_scenarios

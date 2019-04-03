@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 # Copyright 2018 WSO2 Inc. (http://wso2.org)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,35 +20,36 @@
 default_heap_size="4G"
 heap_size="$default_heap_size"
 
-function usageHelp() {
-    echo "-m: Heap memory size. Default value: $default_heap_size"
+function usage() {
+    echo ""
+    echo "Usage: "
+    echo "$0 [-m <heap_size>] [-h]"
+    echo "-m: The heap memory size of WSO2 Enterprise Integrator. Default: $default_heap_size."
+    echo "-h: Display this help and exit."
+    echo ""
 }
-export -f usageHelp
 
-while getopts "m:h" opts; do
-    case $opts in
+while getopts "m:h" opt; do
+    case "${opt}" in
     m)
         heap_size=${OPTARG}
         ;;
     h)
-        usageHelp
+        usage
         exit 0
         ;;
-    *)
-        usageHelp
+    \?)
+        usage
         exit 1
         ;;
     esac
 done
 shift "$((OPTIND - 1))"
 
-function validate() {
-    if [[ -z $heap_size ]]; then
-        echo "Please provide the heap size for the EI program."
-        exit 1
-    fi
-}
-validate
+if [[ -z $heap_size ]]; then
+    echo "Please provide the heap size for WSO2 Enterprise Integrator."
+    exit 1
+fi
 
 jvm_dir=""
 for dir in /usr/lib/jvm/jdk1.8*; do
@@ -64,27 +65,25 @@ if [[ ! -f $startup_script ]]; then
     startup_script=$product_path/bin/wso2server.sh
 fi
 
-if pgrep -f "$carbon_bootstrap_class" > /dev/null; then
+if pgrep -f "$carbon_bootstrap_class" >/dev/null; then
     echo "Shutting down EI"
     $startup_script stop
+
+    echo "Waiting for EI to stop"
+    while true; do
+        if ! pgrep -f "$carbon_bootstrap_class" >/dev/null; then
+            echo "EI stopped"
+            break
+        else
+            sleep 10
+        fi
+    done
 fi
-
-echo "Waiting for EI to stop"
-
-while true
-do
-    if ! pgrep -f "$carbon_bootstrap_class" > /dev/null; then
-        echo "EI stopped"
-        break
-    else
-        sleep 10
-    fi
-done
 
 log_files=($product_path/repository/logs/*)
 if [ ${#log_files[@]} -gt 1 ]; then
     echo "Log files exists. Moving to /tmp"
-    mv $product_path/repository/logs/* /tmp/;
+    mv "${log_files[@]}" /tmp/
 fi
 
 echo "Setting Heap to ${heap_size}"
@@ -107,9 +106,8 @@ until [ $n -ge 60 ]; do
         echo "EI started"
         exit_status=0
         break
-    else
-        sleep 10
     fi
+    sleep 10
     n=$(($n + 1))
 done
 

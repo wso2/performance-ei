@@ -128,4 +128,4 @@ if [[ ! -f $oracle_jdk_dist ]]; then
     SETUP_COMMON_ARGS+="-p openjdk-8-jdk"
 fi
 
-$script_dir/../setup/setup-common.sh "${opts[@]}" "$@" -p curl -p jq -p unzip SETUP_COMMON_ARGS
+$script_dir/../setup/setup-common.sh "${opts[@]}" "$@" -p curl -p jq -p unzip $SETUP_COMMON_ARGS

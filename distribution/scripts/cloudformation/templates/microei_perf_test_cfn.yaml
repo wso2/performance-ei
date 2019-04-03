@@ -59,7 +59,7 @@
 # EI
 {% call ec2instance('WSO2EnterpriseIntegratorInstance', 'ei', '!Ref WSO2EnterpriseIntegratorInstanceType',
   files=[{'name': 'wso2ei_micro_integrator_image.docker', 'ref': 'WSO2EnterpriseIntegratorDistributionName'}, {'name': 'jdk-8-linux-x64.tar.gz', 'ref': 'OracleJDKDistributionName'}]) -%}
-/home/ubuntu/setup/setup-microei.sh -n ${BackendInstance.PrivateIp} -u ubuntu -i /home/ubuntu/wso2ei_micro_integrator_image.docker -j /home/ubuntu/jdk-8-linux-x64.tar.gz
+/home/ubuntu/setup/setup-microei.sh -n ${BackendInstance.PrivateIp} -u ubuntu -i /home/ubuntu/wso2ei_micro_integrator_image.docker
 {%- endcall %}
 # Backend
 {% call ec2instance('BackendInstance', 'backend', '!Ref BackendInstanceType',
