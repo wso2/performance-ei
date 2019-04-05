@@ -21,23 +21,28 @@
 script_dir=$(dirname "$0")
 
 export cpus
+export memory
 export wso2_ei_version
 
 function usageCommand() {
-    echo "-c <cpus> -v <wso2_ei_version>"
+    echo "-c <cpus> -r <memory> -v <wso2_ei_version>"
 }
 export -f usageCommand
 
 function usageHelp() {
-    echo "-c: Number of CPU resources to be used by the WSO2 Enterprise Micro Integrator Container."
+    echo "-c: Number of CPU resources to be used by the WSO2 Enterprise Micro Integrator container."
+    echo "-r: The maximum amount of memory to be used by WSO2 Enterprise Micro Integrator container."
     echo "-v: WSO2 Enterprise Integrator version."
 }
 export -f usageHelp
 
-while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:v:" opt; do
+while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:r:v:" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
+        ;;
+    r)
+        memory=${OPTARG}
         ;;
     v)
         wso2_ei_version=${OPTARG}
@@ -53,6 +58,10 @@ shift "$((OPTIND - 1))"
 function validate() {
     if [[ -z $cpus ]]; then
         echo "Please provide the number of CPU resources to be used by the container."
+        exit 1
+    fi
+    if [[ -z $memory ]]; then
+        echo "Please provide the maximum amount of memory the container can use."
         exit 1
     fi
     if [[ -z $wso2_ei_version ]]; then
@@ -91,7 +100,7 @@ function before_execute_test_scenario() {
     fi
 
     echo "Starting Enterprise Micro Integrator..."
-    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -v $wso2_ei_version"
+    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -r $memory -v $wso2_ei_version"
 }
 
 function after_execute_test_scenario() {

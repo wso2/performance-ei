@@ -20,6 +20,7 @@ script_dir=$(dirname "$0")
 default_heap_size="1G"
 heap_size="$default_heap_size"
 cpus=""
+memory=""
 wso2_ei_version=""
 
 function usage() {
@@ -27,16 +28,20 @@ function usage() {
     echo "Usage: "
     echo "$0 -c <cpus> -v <wso2_ei_version> [-m <heap_size>] [-h]"
     echo "-c: Number of CPU resources to be used by the container."
+    echo "-r: The maximum amount of memory the container can use."
     echo "-v: WSO2 Enterprise Integrator version."
     echo "-m: The heap memory size of Micro Integrator. Default: $default_heap_size."
     echo "-h: Display this help and exit."
     echo ""
 }
 
-while getopts "c:v:m:h" opt; do
+while getopts "c:r:v:m:h" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
+        ;;
+    r)
+        memory=${OPTARG}
         ;;
     v)
         wso2_ei_version=${OPTARG}
@@ -58,6 +63,11 @@ shift "$((OPTIND - 1))"
 
 if [[ -z $cpus ]]; then
     echo "Please provide the number of CPU resources to be used by the container."
+    exit 1
+fi
+
+if [[ -z $memory ]]; then
+    echo "Please provide the maximum amount of memory the container can use."
     exit 1
 fi
 
@@ -94,7 +104,7 @@ capp_dir=$script_dir/capp/
 echo "Starting the docker container:"
 (
     set -x
-    docker run --name=microei -d -p 8280:8290 -p 8243:8253 --add-host=netty:$netty_host --cpus=${cpus} \
+    docker run --name=microei -d -p 8280:8290 -p 8243:8253 --add-host=netty:$netty_host --cpus=${cpus} --memory=${memory} \
         --volume $(realpath $capp_dir):/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/deployment/server/carbonapps \
         --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/wso2carbon.log \
         --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/gc.log \
