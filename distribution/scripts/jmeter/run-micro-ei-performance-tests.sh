@@ -104,10 +104,11 @@ function before_execute_test_scenario() {
 }
 
 function after_execute_test_scenario() {
-    ssh $ei_ssh_host "./ei/microei-stop.sh"
+    docker stats --no-stream microei >${report_location}/docker_stats.txt
     write_server_metrics ei $ei_ssh_host carbon
     download_file $ei_ssh_host logs/wso2carbon.log wso2carbon.log
     download_file $ei_ssh_host logs/gc.log ei_gc.log
+    ssh $ei_ssh_host "./ei/microei-stop.sh"
 }
 
 test_scenarios
