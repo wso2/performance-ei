@@ -38,7 +38,7 @@ verifyRequestPayloads "${message_sizes_array[@]}"
 # Test scenarios
 declare -A test_scenario0=(
     [name]="DirectProxy"
-    [display_name]="DirectProxy"
+    [display_name]="Direct Proxy"
     [description]="Passthrough proxy service"
     [path]="/services/DirectProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
@@ -48,7 +48,7 @@ declare -A test_scenario0=(
 )
 declare -A test_scenario1=(
     [name]="CBRProxy"
-    [display_name]="CBRProxy"
+    [display_name]="CBR Proxy"
     [description]="Routing the message based on the content of the message body"
     [path]="/services/CBRProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
@@ -58,7 +58,7 @@ declare -A test_scenario1=(
 )
 declare -A test_scenario2=(
     [name]="CBRSOAPHeaderProxy"
-    [display_name]="CBRSOAPHeaderProxy"
+    [display_name]="CBR SOAP Header Proxy"
     [description]="Routing the message based on a SOAP header in the message payload"
     [path]="/services/CBRSOAPHeaderProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
@@ -68,7 +68,7 @@ declare -A test_scenario2=(
 )
 declare -A test_scenario3=(
     [name]="CBRTransportHeaderProxy"
-    [display_name]="CBRTransportHeaderProxy"
+    [display_name]="CBR Transport Header Proxy"
     [description]="Routing the message based on an HTTP header in the message"
     [path]="/services/CBRTransportHeaderProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
@@ -78,7 +78,7 @@ declare -A test_scenario3=(
 )
 declare -A test_scenario4=(
     [name]="SecureProxy"
-    [display_name]="SecureProxy"
+    [display_name]="Secure Proxy"
     [description]="Secured proxy service"
     [path]="/services/SecureProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
@@ -88,7 +88,7 @@ declare -A test_scenario4=(
 )
 declare -A test_scenario5=(
     [name]="XSLTEnhancedProxy"
-    [display_name]="XSLTEnhancedProxy"
+    [display_name]="XSLT Enhanced Proxy"
     [description]="Having enhanced, Fast XSLT transformations in request and response paths"
     [path]="/services/XSLTEnhancedProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
@@ -98,7 +98,7 @@ declare -A test_scenario5=(
 )
 declare -A test_scenario10=(
     [name]="XSLTProxy"
-    [display_name]="XSLTProxy"
+    [display_name]="XSLT Proxy"
     [description]="Having XSLT transformations in request and response paths"
     [path]="/services/XSLTProxy/buyStocksOperation"
     [jmx]="ei-test.jmx"
