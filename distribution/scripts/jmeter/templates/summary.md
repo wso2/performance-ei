@@ -20,8 +20,8 @@ delays.
 
 The main performance metrics:
 
-1. **Throughput**: The number of requests that the WSO2 Enterprise {% if parameters.wso2ei_profile_type == 'microei' %} Micro {% endif%}Integrator processes during a specific time interval (e.g. per second).
-2. **Response Time**: The end-to-end latency for an operation of invoking a service in WSO2 Enterprise {% if parameters.wso2ei_profile_type == 'microei' %} Micro {% endif%} Integrator. The complete distribution of response times was recorded.
+1. **Throughput**: The number of requests that the {{ parameters.application_name }} processes during a specific time interval (e.g. per second).
+2. **Response Time**: The end-to-end latency for an operation of invoking a service in {{ parameters.application_name }} . The complete distribution of response times was recorded.
 
 In addition to the above metrics, we measure the load average and several memory-related metrics.
 
@@ -33,10 +33,22 @@ The following are the test parameters.
 | Heap Size | The amount of memory allocated to the application | {{ parameters.heap_sizes|join(', ') }} |
 | Concurrent Users | The number of users accessing the application at the same time. | {{ parameters.concurrent_users|join(', ') }} |
 | Message Size (Bytes) | The request payload size in Bytes. | {{ parameters.message_sizes|join(', ') }} |
-| Back-end Delay (ms) | The delay added by the back-end service. | {{ parameters.backend_sleep_times|join(', ') }} |
+| Back-end Delay (ms) | The delay added by the Back-end service. | {{ parameters.backend_sleep_times|join(', ') }} |
 
 The duration of each test is **{{ parameters.test_duration }} seconds**. The warm-up period is **{{ parameters.warmup_time }} seconds**.
 The measurement results are collected after the warm-up period.
+
+The performance tests were executed on {{ parameters.number_of_stacks }} AWS CloudFormation stack{{ parameters.number_of_stacks|pluralize }}.
+
+{% for instance in instances %}
+System information for {{ parameters.application_name }} in {{ loop.index|humanize_ordinal }} AWS CloudFormation stack.
+
+| Class | Subclass | Description | Value |
+| --- | --- | --- | --- |
+{%- for system_info in instance.system_info %}
+| {{ system_info['class'] }} | {{ system_info['subclass'] }} | {{ system_info['description'] }} | {{ system_info['value'] }} |
+{%- endfor %}
+{%- endfor %}
 
 A [**{{ parameters.wso2ei_ec2_instance_type }}** Amazon EC2 instance](https://aws.amazon.com/ec2/instance-types/) was used to install EI.
 
