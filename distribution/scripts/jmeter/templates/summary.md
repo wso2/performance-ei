@@ -50,7 +50,6 @@ System information for {{ parameters.application_name }} in {{ loop.index|humani
 {%- endfor %}
 {%- endfor %}
 
-A [**{{ parameters.wso2ei_ec2_instance_type }}** Amazon EC2 instance](https://aws.amazon.com/ec2/instance-types/) was used to install EI.
 
 The following are the measurements collected from each performance test conducted for a given combination of
 test parameters.
