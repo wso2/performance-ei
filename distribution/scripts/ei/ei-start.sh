@@ -101,7 +101,7 @@ exit_status=100
 
 n=0
 until [ $n -ge 60 ]; do
-    response_code="$(curl -sk -w "%{http_code}" -o /dev/null https://localhost:8243/services/Version)"
+    response_code=$(curl -s -w '%{http_code}' -o /dev/null -d '<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Body><p:echoInt xmlns:p="http://echo.services.core.carbon.wso2.org"><in>1</in></p:echoInt></soapenv:Body></soapenv:Envelope>' -H 'Content-Type: application/soap+xml; charset=UTF-8; action="urn:echoInt"' http://localhost:8280/services/echo || echo "")
     if [ $response_code -eq 200 ]; then
         echo "EI started"
         exit_status=0
