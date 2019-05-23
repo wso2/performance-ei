@@ -22,6 +22,7 @@ script_dir=$(dirname "$0")
 
 export cpus
 export wso2_ei_version
+export server_type
 
 function usageCommand() {
     echo "-c <cpus> -v <wso2_ei_version>"
@@ -34,7 +35,7 @@ function usageHelp() {
 }
 export -f usageHelp
 
-while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:v:" opt; do
+while getopts ":u:a:b:s:m:d:w:n:j:k:l:i:e:tp:hc:v:" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
@@ -42,6 +43,9 @@ while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:v:" opt; do
     v)
         wso2_ei_version=${OPTARG}
         ;;
+    a)
+	server_type=${OPTARG}
+	;;
     *)
         opts+=("-${opt}")
         [[ -n "$OPTARG" ]] && opts+=("$OPTARG")
@@ -57,6 +61,10 @@ function validate() {
     fi
     if [[ -z $wso2_ei_version ]]; then
         echo "Please provide WSO2 Enterprise Integrator version."
+        exit 1
+    fi
+    if [[ -z $server_type ]]; then
+        echo "Please provide the Server Type correctly as ei or mei."
         exit 1
     fi
 }
@@ -91,7 +99,7 @@ function before_execute_test_scenario() {
     fi
 
     echo "Starting Enterprise Micro Integrator..."
-    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -v $wso2_ei_version"
+    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -v $wso2_ei_version -a $server_type"
 }
 
 function after_execute_test_scenario() {

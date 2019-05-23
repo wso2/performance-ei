@@ -21,6 +21,7 @@ default_heap_size="1G"
 heap_size="$default_heap_size"
 cpus=""
 wso2_ei_version=""
+server_type=""
 
 function usage() {
     echo ""
@@ -30,10 +31,11 @@ function usage() {
     echo "-v: WSO2 Enterprise Integrator version."
     echo "-m: The heap memory size of Micro Integrator. Default: $default_heap_size."
     echo "-h: Display this help and exit."
+    echo "-a: ei for EI and mei for Micro EI"
     echo ""
 }
 
-while getopts "c:v:m:h" opt; do
+while getopts "c:v:m:ha:" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
@@ -44,6 +46,9 @@ while getopts "c:v:m:h" opt; do
     m)
         heap_size=${OPTARG}
         ;;
+    a)
+	server_type=${OPTARG}
+	;;
     h)
         usage
         exit 0
@@ -71,6 +76,11 @@ if [[ -z $heap_size ]]; then
     exit 1
 fi
 
+if [[ -z $server_type ]]; then
+    echo "Please provide ei or mei for Enterprise Integrator or Micro Integrator respectively."
+    exit 1
+fi
+
 netty_host=$(getent hosts netty | awk '{ print $1 }')
 
 echo "Setting Heap to ${heap_size}"
@@ -94,11 +104,22 @@ capp_dir=$script_dir/capp/
 echo "Starting the docker container:"
 (
     set -x
-    docker run --name=microei -d -p 8280:8290 -p 8243:8253 --add-host=netty:$netty_host --cpus=${cpus} \
-        --volume $(realpath $capp_dir):/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/deployment/server/carbonapps \
-        --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/wso2carbon.log \
-        --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/gc.log \
-        -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2ei-micro-integrator:${wso2_ei_version}
+    if test "$server_type" = "mei"
+    then
+        docker run --name=microei -d -p 8280:8290 -p 8243:8253 --add-host=netty:$netty_host --cpus=${cpus} --memory=${memory} \
+            --volume $(realpath $capp_dir):/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/deployment/server/carbonapps \
+            --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/wso2carbon.log \
+            --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/gc.log \
+            -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2ei-micro-integrator:${wso2_ei_version}
+    fi
+    if test "$server_type" = "ei"
+    then
+        docker run --name=microei -d -p 8280:8280 -p 8243:8243 --add-host=netty:$netty_host --cpus=${cpus} --memory=${memory} \
+            --volume $(realpath $capp_dir):/home/wso2carbon/wso2ei-${wso2_ei_version}/repository/deployment/server/carbonapps \
+            --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/repository/logs/wso2carbon.log \
+            --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/repository/logs/gc.log \
+            -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2ei-micro-integrator:${wso2_ei_version}
+    fi
 )
 
 echo "Waiting for EI to start."
