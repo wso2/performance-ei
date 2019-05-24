@@ -48,6 +48,7 @@ System information for {{ parameters.application_name }} in {{ loop.index|humani
 {%- for system_info in instance.system_info %}
 | {{ system_info['class'] }} | {{ system_info['subclass'] }} | {{ system_info['description'] }} | {{ system_info['value'] }} |
 {%- endfor %}
+
 {%- endfor %}
 
 
