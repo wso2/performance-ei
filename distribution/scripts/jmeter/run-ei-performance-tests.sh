@@ -52,7 +52,6 @@ function before_execute_test_scenario() {
 }
 
 function after_execute_test_scenario() {
-    ssh $ei_ssh_host "./ei/microei-stop.sh"
     write_server_metrics ei $ei_ssh_host carbon
     download_file $ei_ssh_host wso2ei/repository/logs/wso2carbon.log wso2carbon.log
     download_file $ei_ssh_host wso2ei/repository/logs/gc.log ei_gc.log

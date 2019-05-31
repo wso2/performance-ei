@@ -21,26 +21,31 @@
 script_dir=$(dirname "$0")
 
 export cpus
+export memory
 export wso2_ei_version
 export default_server_type="microei"
 export server_type="$default_server_type"
 
 function usageCommand() {
-    echo "-c <cpus> -v <wso2_ei_version> -a <server_type>"
+    echo "-c <cpus> -r <memory> -v <wso2_ei_version> -a <server_type>"
 }
 export -f usageCommand
 
 function usageHelp() {
-    echo "-c: Number of CPU resources to be used by the WSO2 Enterprise Micro Integrator Container."
+    echo "-c: Number of CPU resources to be used by the WSO2 Enterprise Micro Integrator container."
+    echo "-r: The maximum amount of memory to be used by WSO2 Enterprise Micro Integrator container."
     echo "-v: WSO2 Enterprise Integrator version."
     echo "-a: Server Type. \"ei\" for EI and \"microei\" for Micro EI. Default: $default_server_type"
 }
 export -f usageHelp
 
-while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:v:a:" opt; do
+while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:r:v:a:" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
+        ;;
+    r)
+        memory=${OPTARG}
         ;;
     v)
         wso2_ei_version=${OPTARG}
@@ -59,6 +64,10 @@ shift "$((OPTIND - 1))"
 function validate() {
     if [[ -z $cpus ]]; then
         echo "Please provide the number of CPU resources to be used by the container."
+        exit 1
+    fi
+    if [[ -z $memory ]]; then
+        echo "Please provide the maximum amount of memory the container can use."
         exit 1
     fi
     if [[ -z $wso2_ei_version ]]; then
@@ -101,14 +110,15 @@ function before_execute_test_scenario() {
     fi
 
     echo "Starting Enterprise Micro Integrator..."
-    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -v $wso2_ei_version -a $server_type"
+    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -r $memory -v $wso2_ei_version -a $server_type"
 }
 
 function after_execute_test_scenario() {
-    ssh $ei_ssh_host "./ei/microei-stop.sh"
+    ssh $ei_ssh_host docker stats --no-stream microei >${report_location}/docker_stats.txt
     write_server_metrics ei $ei_ssh_host carbon
     download_file $ei_ssh_host logs/wso2carbon.log wso2carbon.log
     download_file $ei_ssh_host logs/gc.log ei_gc.log
+    ssh $ei_ssh_host "./ei/microei-stop.sh"
 }
 
 test_scenarios

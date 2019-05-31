@@ -20,6 +20,7 @@ script_dir=$(dirname "$0")
 default_heap_size="1G"
 heap_size="$default_heap_size"
 cpus=""
+memory=""
 wso2_ei_version=""
 default_server_type="microei"
 server_type="$default_server_type"
@@ -27,8 +28,9 @@ server_type="$default_server_type"
 function usage() {
     echo ""
     echo "Usage: "
-    echo "$0 -c <cpus> -v <wso2_ei_version> [-m <heap_size>] [-a <server_type>] [-h]"
+    echo "$0 -c <cpus> -r <memory> -v <wso2_ei_version> [-m <heap_size>] [-a <server_type>] [-h]"
     echo "-c: Number of CPU resources to be used by the container."
+    echo "-r: The maximum amount of memory the container can use."
     echo "-v: WSO2 Enterprise Integrator version."
     echo "-m: The heap memory size of Micro Integrator. Default: $default_heap_size."
     echo "-a: Server Type. \"ei\" for EI and \"microei\" for Micro EI. Default: $default_server_type"
@@ -36,10 +38,13 @@ function usage() {
     echo ""
 }
 
-while getopts "c:v:m:a:h" opt; do
+while getopts "c:r:v:m:a:h" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
+        ;;
+    r)
+        memory=${OPTARG}
         ;;
     v)
         wso2_ei_version=${OPTARG}
@@ -64,6 +69,11 @@ shift "$((OPTIND - 1))"
 
 if [[ -z $cpus ]]; then
     echo "Please provide the number of CPU resources to be used by the container."
+    exit 1
+fi
+
+if [[ -z $memory ]]; then
+    echo "Please provide the maximum amount of memory the container can use."
     exit 1
 fi
 
