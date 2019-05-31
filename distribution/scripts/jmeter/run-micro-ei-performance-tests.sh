@@ -22,20 +22,22 @@ script_dir=$(dirname "$0")
 
 export cpus
 export wso2_ei_version
-export server_type
+export default_server_type="microei"
+export server_type="$default_server_type"
 
 function usageCommand() {
-    echo "-c <cpus> -v <wso2_ei_version>"
+    echo "-c <cpus> -v <wso2_ei_version> -a <server_type>"
 }
 export -f usageCommand
 
 function usageHelp() {
     echo "-c: Number of CPU resources to be used by the WSO2 Enterprise Micro Integrator Container."
     echo "-v: WSO2 Enterprise Integrator version."
+    echo "-a: Server Type. \"ei\" for EI and \"microei\" for Micro EI. Default: $default_server_type"
 }
 export -f usageHelp
 
-while getopts ":u:a:b:s:m:d:w:n:j:k:l:i:e:tp:hc:v:" opt; do
+while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:v:a:" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
@@ -44,8 +46,8 @@ while getopts ":u:a:b:s:m:d:w:n:j:k:l:i:e:tp:hc:v:" opt; do
         wso2_ei_version=${OPTARG}
         ;;
     a)
-	server_type=${OPTARG}
-	;;
+	    server_type=${OPTARG}
+	    ;;
     *)
         opts+=("-${opt}")
         [[ -n "$OPTARG" ]] && opts+=("$OPTARG")
@@ -64,7 +66,7 @@ function validate() {
         exit 1
     fi
     if [[ -z $server_type ]]; then
-        echo "Please provide the Server Type correctly as ei or mei."
+        echo "Please provide the server type."
         exit 1
     fi
 }
