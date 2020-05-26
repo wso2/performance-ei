@@ -16,45 +16,99 @@
 # under the License.
 #
 # ----------------------------------------------------------------------------
-# Run WSO2 Enterprise Integrator Performance Tests
+# Run performance tests on AWS Cloudformation Stacks
 # ----------------------------------------------------------------------------
-script_dir=$(dirname "$0")
-# Execute common script
-. $script_dir/perf-test-common.sh "${ARGS[@]}"
 
-function initialize() {
-    export ei_ssh_host=ei
-    export ei_host=$(get_ssh_hostname $ei_ssh_host)
+export script_name="$0"
+export script_dir=$(dirname "$0")
+
+export aws_cloudformation_template_filename="mi_perf_test_cfn.yaml"
+export application_name="WSO2 Micro Integrator"
+export ec2_instance_name="ei"
+export metrics_file_prefix="ei"
+export run_performance_tests_script_name="run-mi-performance-tests.sh"
+
+export wso2ei_distribution=""
+export wso2ei_ec2_instance_type=""
+
+function usageCommand() {
+    echo "-e <wso2ei_distribution> -E <wso2ei_ec2_instance_type>"
 }
-export -f initialize
+export -f usageCommand
 
-# Include Test Scenarios
-. $script_dir/performance-test-scenarios.sh
+function usageHelp() {
+    echo "-e: $application_name Distribution."
+    echo "-E: Amazon EC2 Instance Type for $application_name."
+}
+export -f usageHelp
 
-function before_execute_test_scenario() {
-    local service_path=${scenario[path]}
-    local protocol=${scenario[protocol]}
-    local response_pattern="soapenv:Body"
+while getopts ":u:f:d:k:n:j:o:g:s:b:r:J:S:N:t:p:w:he:E:" opt; do
+    case "${opt}" in
+    e)
+        wso2ei_distribution=${OPTARG}
+        ;;
+    E)
+        wso2ei_ec2_instance_type=${OPTARG}
+        ;;
+    *)
+        opts+=("-${opt}")
+        [[ -n "$OPTARG" ]] && opts+=("$OPTARG")
+        ;;
+    esac
+done
+shift "$((OPTIND - 1))"
 
-    jmeter_params+=("host=$ei_host" "path=$service_path" "response_pattern=${response_pattern}")
-    jmeter_params+=("response_size=${msize}B" "protocol=$protocol")
-
-    if [[ "${scenario[name]}" == "SecureProxy" ]]; then
-        jmeter_params+=("port=8253")
-        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks_secure.xml")
-    else
-        jmeter_params+=("port=8290")
-        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml")
+function validate() {
+    if [[ ! -f $wso2ei_distribution ]]; then
+        echo "Please provide $application_name distribution."
+        exit 1
     fi
 
-    echo "Starting Micro Integrator..."
-    ssh $ei_ssh_host "./ei/mi-start.sh -m $heap"
-}
+    export wso2ei_distribution_filename=$(basename $wso2ei_distribution)
 
-function after_execute_test_scenario() {
-    write_server_metrics ei $ei_ssh_host carbon
-    download_file $ei_ssh_host wso2ei/repository/logs/wso2carbon.log wso2carbon.log
-    download_file $ei_ssh_host wso2ei/repository/logs/gc.log ei_gc.log
-}
+    if [[ ${wso2ei_distribution_filename: -4} != ".zip" ]]; then
+        echo "$application_name distribution must have .zip extension"
+        exit 1
+    fi
 
-test_scenarios
+    if [[ -z $wso2ei_ec2_instance_type ]]; then
+        echo "Please provide the Amazon EC2 Instance Type for $application_name."
+        exit 1
+    fi
+}
+export -f validate
+
+function create_links() {
+    wso2ei_distribution=$(realpath $wso2ei_distribution)
+    ln -s $wso2ei_distribution $temp_dir/$wso2ei_distribution_filename
+}
+export -f create_links
+
+function get_test_metadata() {
+    echo "wso2ei_ec2_instance_type=$wso2ei_ec2_instance_type"
+}
+export -f get_test_metadata
+
+function get_cf_parameters() {
+    echo "WSO2EnterpriseIntegratorDistributionName=$wso2ei_distribution_filename"
+    echo "WSO2EnterpriseIntegratorInstanceType=$wso2ei_ec2_instance_type"
+}
+export -f get_cf_parameters
+
+function get_columns() {
+    echo "Scenario Name"
+    echo "Heap Size"
+    echo "Concurrent Users"
+    echo "Message Size (Bytes)"
+    echo "Back-end Service Delay (ms)"
+    echo "Error %"
+    echo "Throughput (Requests/sec)"
+    echo "Average Response Time (ms)"
+    echo "Standard Deviation of Response Time (ms)"
+    echo "99th Percentile of Response Time (ms)"
+    echo "$application_name GC Throughput (%)"
+    echo "Average $application_name Memory Footprint After Full GC (M)"
+}
+export -f get_columns
+
+$script_dir/cloudformation-common.sh "${opts[@]}" -- "$@"

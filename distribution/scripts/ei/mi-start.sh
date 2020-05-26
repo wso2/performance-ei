@@ -99,18 +99,18 @@ echo "Waiting for MI to start"
 
 exit_status=100
 
-# n=0
-#until [ $n -ge 60 ]; do
-#    response_code=$(curl -s -w '%{http_code}' -o /dev/null -d '<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Body><p:echoInt xmlns:p="http://echo.services.core.carbon.wso2.org"><in>1</in></p:echoInt></soapenv:Body></soapenv:Envelope>' -H 'Content-Type: application/soap+xml; charset=UTF-8; action="urn:echoInt"' http://localhost:8290/services/echo || echo "")
-#    if [ $response_code -eq 200 ]; then
-#        echo "MI started"
-#        exit_status=0
-#        break
-#    fi
-#    sleep 10
-#    n=$(($n + 1))
-# done
+n=0
+until [ $n -ge 60 ]; do
+   response_code=$(curl -s -w '%{http_code}' -o /dev/null http://localhost:9201/healthz || echo "")
+   if [ $response_code -eq 200 ]; then
+       echo "MI started"
+       exit_status=0
+       break
+   fi
+   sleep 10
+   n=$(($n + 1))
+done
 
 # Wait for another 10 seconds to make sure that the server is ready to accept API requests.
-sleep 15
+sleep 10
 exit $exit_status
