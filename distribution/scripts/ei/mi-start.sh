@@ -58,7 +58,7 @@ done
 export JAVA_HOME="${jvm_dir}"
 
 carbon_bootstrap_class=org.wso2.carbon.bootstrap.Bootstrap
-product_path=$HOME/wso2ei
+product_path=$HOME/wso2mi
 startup_script=$product_path/bin/micro-integrator.sh
 
 if [[ ! -f $startup_script ]]; then
@@ -107,10 +107,10 @@ until [ $n -ge 60 ]; do
        exit_status=0
        break
    fi
-   sleep 10
+   sleep 5
    n=$(($n + 1))
 done
 
 # Wait for another 10 seconds to make sure that the server is ready to accept API requests.
-sleep 10
+sleep 5
 exit $exit_status
