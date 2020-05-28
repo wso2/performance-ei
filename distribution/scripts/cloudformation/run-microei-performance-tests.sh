@@ -23,30 +23,25 @@ export script_name="$0"
 export script_dir=$(dirname "$0")
 
 export aws_cloudformation_template_filename="microei_perf_test_cfn.yaml"
-export application_name="WSO2 Enterprise Micro Integrator"
+export application_name="WSO2 Micro Integrator - Docker"
 export ec2_instance_name="ei"
 export metrics_file_prefix="ei"
 export run_performance_tests_script_name="run-micro-ei-performance-tests.sh"
 
-export wso2ei_distribution=""
 export wso2ei_ec2_instance_type=""
 
 function usageCommand() {
-    echo "-e <wso2ei_distribution> -E <wso2ei_ec2_instance_type>"
+    echo "-E <wso2ei_ec2_instance_type>"
 }
 export -f usageCommand
 
 function usageHelp() {
-    echo "-e: $application_name docker image."
     echo "-E: Amazon EC2 Instance Type for $application_name."
 }
 export -f usageHelp
 
 while getopts ":u:f:d:k:n:j:o:g:s:b:r:J:S:N:t:p:w:he:E:" opt; do
     case "${opt}" in
-    e)
-        wso2ei_distribution=${OPTARG}
-        ;;
     E)
         wso2ei_ec2_instance_type=${OPTARG}
         ;;
@@ -59,18 +54,6 @@ done
 shift "$((OPTIND - 1))"
 
 function validate() {
-    if [[ ! -f $wso2ei_distribution ]]; then
-        echo "Please provide $application_name docker image."
-        exit 1
-    fi
-
-    export wso2ei_distribution_filename=$(basename $wso2ei_distribution)
-
-    if [[ ${wso2ei_distribution_filename: -7} != ".docker" ]]; then
-        echo "$application_name docker image must have .docker extension."
-        exit 1
-    fi
-
     if [[ -z $wso2ei_ec2_instance_type ]]; then
         echo "Please provide the Amazon EC2 Instance Type for $application_name."
         exit 1
@@ -78,19 +61,12 @@ function validate() {
 }
 export -f validate
 
-function create_links() {
-    wso2ei_distribution=$(realpath $wso2ei_distribution)
-    ln -s $wso2ei_distribution $temp_dir/$wso2ei_distribution_filename
-}
-export -f create_links
-
 function get_test_metadata() {
     echo "wso2ei_ec2_instance_type=$wso2ei_ec2_instance_type"
 }
 export -f get_test_metadata
 
 function get_cf_parameters() {
-    echo "WSO2EnterpriseIntegratorDistributionName=$wso2ei_distribution_filename"
     echo "WSO2EnterpriseIntegratorInstanceType=$wso2ei_ec2_instance_type"
 }
 export -f get_cf_parameters

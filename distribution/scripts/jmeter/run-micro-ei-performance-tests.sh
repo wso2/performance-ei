@@ -23,11 +23,9 @@ script_dir=$(dirname "$0")
 export cpus
 export memory
 export wso2_ei_version
-export default_server_type="microei"
-export server_type="$default_server_type"
 
 function usageCommand() {
-    echo "-c <cpus> -r <memory> -v <wso2_ei_version> -a <server_type>"
+    echo "-c <cpus> -r <memory> -v <wso2_ei_version>"
 }
 export -f usageCommand
 
@@ -35,11 +33,10 @@ function usageHelp() {
     echo "-c: Number of CPU resources to be used by the WSO2 Enterprise Micro Integrator container."
     echo "-r: The maximum amount of memory to be used by WSO2 Enterprise Micro Integrator container."
     echo "-v: WSO2 Enterprise Integrator version."
-    echo "-a: Server Type. \"ei\" for EI and \"microei\" for Micro EI. Default: $default_server_type"
 }
 export -f usageHelp
 
-while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:r:v:a:" opt; do
+while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:r:v:" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
@@ -50,9 +47,6 @@ while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:r:v:a:" opt; do
     v)
         wso2_ei_version=${OPTARG}
         ;;
-    a)
-	    server_type=${OPTARG}
-	    ;;
     *)
         opts+=("-${opt}")
         [[ -n "$OPTARG" ]] && opts+=("$OPTARG")
@@ -72,10 +66,6 @@ function validate() {
     fi
     if [[ -z $wso2_ei_version ]]; then
         echo "Please provide WSO2 Enterprise Integrator version."
-        exit 1
-    fi
-    if [[ -z $server_type ]]; then
-        echo "Please provide the server type."
         exit 1
     fi
 }
@@ -102,15 +92,15 @@ function before_execute_test_scenario() {
     jmeter_params+=("response_size=${msize}B" "protocol=$protocol")
 
     if [[ "${scenario[name]}" == "SecureProxy" ]]; then
-        jmeter_params+=("port=8243")
+        jmeter_params+=("port=8253")
         jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks_secure.xml")
     else
-        jmeter_params+=("port=8280")
+        jmeter_params+=("port=8290")
         jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml")
     fi
 
     echo "Starting Enterprise Micro Integrator..."
-    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -r $memory -v $wso2_ei_version -a $server_type"
+    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -r $memory -v $wso2_ei_version"
 }
 
 function after_execute_test_scenario() {

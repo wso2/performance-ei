@@ -17,11 +17,6 @@
 #}
 {% extends "common_perf_test_cfn.yaml" %}
 {% block parameters -%}
-  WSO2EnterpriseIntegratorDistributionName:
-    Description: The name of the 'WSO2 Enterprise Integrator Distribution' in S3 Bucket
-    Type: String
-    ConstraintDescription: must be a valid zip package
-    AllowedPattern: ^.*\.(zip|docker)$
   WSO2EnterpriseIntegratorInstanceType:
     Description: EI EC2 instance type
     Type: String
@@ -58,8 +53,8 @@
 {%- endif %}
 # EI
 {% call ec2instance('WSO2EnterpriseIntegratorInstance', 'ei', '!Ref WSO2EnterpriseIntegratorInstanceType',
-  files=[{'name': 'wso2ei_micro_integrator_image.docker', 'ref': 'WSO2EnterpriseIntegratorDistributionName'}, {'name': 'jdk-8-linux-x64.tar.gz', 'ref': 'OracleJDKDistributionName'}]) -%}
-/home/ubuntu/setup/setup-microei.sh -n ${BackendInstance.PrivateIp} -u ubuntu -i /home/ubuntu/wso2ei_micro_integrator_image.docker
+  files=[{'name': 'jdk-8-linux-x64.tar.gz', 'ref': 'OracleJDKDistributionName'}]) -%}
+/home/ubuntu/setup/setup-microei.sh -n ${BackendInstance.PrivateIp} -u ubuntu
 {%- endcall %}
 # Backend
 {% call ec2instance('BackendInstance', 'backend', '!Ref BackendInstanceType',

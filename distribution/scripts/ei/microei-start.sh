@@ -31,14 +31,13 @@ function usage() {
     echo "$0 -c <cpus> -r <memory> -v <wso2_ei_version> [-m <heap_size>] [-a <server_type>] [-h]"
     echo "-c: Number of CPU resources to be used by the container."
     echo "-r: The maximum amount of memory the container can use."
-    echo "-v: WSO2 Enterprise Integrator version."
+    echo "-v: WSO2 Micro Integrator Integrator version."
     echo "-m: The heap memory size of Micro Integrator. Default: $default_heap_size."
-    echo "-a: Server Type. \"ei\" for EI and \"microei\" for Micro EI. Default: $default_server_type"
     echo "-h: Display this help and exit."
     echo ""
 }
 
-while getopts "c:r:v:m:a:h" opt; do
+while getopts "c:r:v:m:h" opt; do
     case "${opt}" in
     c)
         cpus=${OPTARG}
@@ -52,9 +51,6 @@ while getopts "c:r:v:m:a:h" opt; do
     m)
         heap_size=${OPTARG}
         ;;
-    a)
-	    server_type=${OPTARG}
-	    ;;
     h)
         usage
         exit 0
@@ -87,16 +83,6 @@ if [[ -z $heap_size ]]; then
     exit 1
 fi
 
-if [[ -z $server_type ]]; then
-    echo "Please provide the server type."
-    exit 1
-fi
-
-if [[ $server_type != "ei" ]] && [[ $server_type != "microei" ]]; then
-    echo "Server type must be \"ei\" or \"microei\"."
-    exit 1
-fi
-
 netty_host=$(getent hosts netty | awk '{ print $1 }')
 
 echo "Setting Heap to ${heap_size}"
@@ -117,40 +103,27 @@ chmod o+w ${HOME}/logs/gc.log
 
 # Sample CAPP location
 capp_dir=$script_dir/capp/
-echo "Starting the docker container for server type: $server_type"
-(
-    set -x
-    if [[ "$server_type" == "microei" ]]; then
-        docker run --name=microei -d -p 8280:8290 -p 8243:8253 --add-host=netty:$netty_host --cpus=${cpus} --memory=${memory} \
-            --volume $(realpath $capp_dir):/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/deployment/server/carbonapps \
-            --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/wso2carbon.log \
-            --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/gc.log \
-            -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2ei-micro-integrator:${wso2_ei_version}
-    elif [[ "$server_type" == "ei" ]]; then
-        docker run --name=microei -d -p 8280:8280 -p 8243:8243 --add-host=netty:$netty_host --cpus=${cpus} --memory=${memory} \
-            --volume $(realpath $capp_dir):/home/wso2carbon/wso2ei-${wso2_ei_version}/repository/deployment/server/carbonapps \
-            --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/repository/logs/wso2carbon.log \
-            --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2ei-${wso2_ei_version}/repository/logs/gc.log \
-            -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2ei-micro-integrator:${wso2_ei_version}
-    else
-        echo "Invalid server type."
-        exit 1
-    fi
-)
 
-echo "Waiting for EI to start."
+set -x
+docker run --name=microei -d -p 8290:8290 -p 9201:9201 -p 8253:8253 --add-host=netty:$netty_host --cpus=${cpus} --memory=${memory} \
+        --volume $(realpath $capp_dir):/home/wso2carbon/wso2mi-${wso2_ei_version}/repository/deployment/server/carbonapps \
+        --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2mi-${wso2_ei_version}/repository/logs/wso2carbon.log \
+        --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2mi-${wso2_ei_version}/repository/logs/gc.log \
+        -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2/wso2mi:${wso2_ei_version}
+
+echo "Waiting for MI to start."
 
 exit_status=100
 n=0
 until [ $n -ge 60 ]; do
-    response_code=$(curl -s -w '%{http_code}' -o /dev/null -d '<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Body><p:echoInt xmlns:p="http://echo.services.core.carbon.wso2.org"><in>1</in></p:echoInt></soapenv:Body></soapenv:Envelope>' -H 'Content-Type: application/soap+xml; charset=UTF-8; action="urn:echoInt"' http://localhost:8280/services/echo || echo "")
-    if [ $response_code -eq 200 ]; then
-        echo "EI started"
-        exit_status=0
-        break
-    fi
-    sleep 10
-    n=$(($n + 1))
+   response_code=$(curl -s -w '%{http_code}' -o /dev/null http://localhost:9201/healthz || echo "")
+   if [ $response_code -eq 200 ]; then
+       echo "MI started"
+       exit_status=0
+       break
+   fi
+   sleep 5
+   n=$(($n + 1))
 done
 
 # Wait for 10 seconds to make sure that the server is ready to accept API requests.
