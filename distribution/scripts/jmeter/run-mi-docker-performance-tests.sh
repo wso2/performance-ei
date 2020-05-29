@@ -22,17 +22,17 @@ script_dir=$(dirname "$0")
 
 export cpus
 export memory
-export wso2_ei_version
+export wso2_mi_version
 
 function usageCommand() {
-    echo "-c <cpus> -r <memory> -v <wso2_ei_version>"
+    echo "-c <cpus> -r <memory> -v <wso2_mi_version>"
 }
 export -f usageCommand
 
 function usageHelp() {
-    echo "-c: Number of CPU resources to be used by the WSO2 Enterprise Micro Integrator container."
-    echo "-r: The maximum amount of memory to be used by WSO2 Enterprise Micro Integrator container."
-    echo "-v: WSO2 Enterprise Integrator version."
+    echo "-c: Number of CPU resources to be used by the WSO2 Micro Integrator container."
+    echo "-r: The maximum amount of memory to be used by WSO2 Micro Integrator container."
+    echo "-v: WSO2 Micro Integrator version."
 }
 export -f usageHelp
 
@@ -45,7 +45,7 @@ while getopts ":u:b:s:m:d:w:n:j:k:l:i:e:tp:hc:r:v:" opt; do
         memory=${OPTARG}
         ;;
     v)
-        wso2_ei_version=${OPTARG}
+        wso2_mi_version=${OPTARG}
         ;;
     *)
         opts+=("-${opt}")
@@ -64,8 +64,8 @@ function validate() {
         echo "Please provide the maximum amount of memory the container can use."
         exit 1
     fi
-    if [[ -z $wso2_ei_version ]]; then
-        echo "Please provide WSO2 Enterprise Integrator version."
+    if [[ -z $wso2_mi_version ]]; then
+        echo "Please provide WSO2 Micro Integrator version."
         exit 1
     fi
 }
@@ -75,8 +75,8 @@ export -f validate
 . $script_dir/perf-test-common.sh "${opts[@]}"
 
 function initialize() {
-    export ei_ssh_host=ei
-    export ei_host=$(get_ssh_hostname $ei_ssh_host)
+    export mi_ssh_host=mi
+    export mi_host=$(get_ssh_hostname $mi_ssh_host)
 }
 export -f initialize
 
@@ -88,7 +88,7 @@ function before_execute_test_scenario() {
     local protocol=${scenario[protocol]}
     local response_pattern="soapenv:Body"
 
-    jmeter_params+=("host=$ei_host" "path=$service_path" "response_pattern=${response_pattern}")
+    jmeter_params+=("host=$mi_host" "path=$service_path" "response_pattern=${response_pattern}")
     jmeter_params+=("response_size=${msize}B" "protocol=$protocol")
 
     if [[ "${scenario[name]}" == "SecureProxy" ]]; then
@@ -99,16 +99,16 @@ function before_execute_test_scenario() {
         jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml")
     fi
 
-    echo "Starting Enterprise Micro Integrator..."
-    ssh $ei_ssh_host "./ei/microei-start.sh -m $heap -c $cpus -r $memory -v $wso2_ei_version"
+    echo "Starting Micro Integrator Docker..."
+    ssh $mi_ssh_host "./ei/mi-docker-start.sh -m $heap -c $cpus -r $memory -v $wso2_mi_version"
 }
 
 function after_execute_test_scenario() {
-    ssh $ei_ssh_host docker stats --no-stream microei >${report_location}/docker_stats.txt
-    write_server_metrics ei $ei_ssh_host carbon
-    download_file $ei_ssh_host logs/wso2carbon.log wso2carbon.log
-    download_file $ei_ssh_host logs/gc.log ei_gc.log
-    ssh $ei_ssh_host "./ei/microei-stop.sh"
+    ssh $mi_ssh_host docker stats --no-stream microei >${report_location}/docker_stats.txt
+    write_server_metrics mi $mi_ssh_host carbon
+    download_file $mi_ssh_host logs/wso2carbon.log wso2carbon.log
+    download_file $mi_ssh_host logs/gc.log mi_gc.log
+    ssh $mi_ssh_host "./ei/mi-docker-stop.sh"
 }
 
 test_scenarios

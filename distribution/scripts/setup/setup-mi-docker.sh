@@ -31,7 +31,6 @@ export netty_host=""
 function usageHelp() {
     echo "-n: The hostname of Netty Service."
     echo "-u: General user of the OS."
-    # echo "-i: Docker image of the micro integrator."
 }
 export -f usageHelp
 
@@ -43,9 +42,6 @@ while getopts "n:u:h" opt; do
     u)
         user=${OPTARG}
         ;;
-    # i)
-    #     micro_ei_docker_image=${OPTARG}
-    #     ;;
     h)
         usageHelp
         exit 0
@@ -65,11 +61,6 @@ validate() {
         exit 1
     fi
 
-    # if [[ ! -f $micro_ei_docker_image ]]; then
-    #     echo "Docker image for micro integrator not provided. Please provide the Docker image path."
-    #     exit 1
-    # fi
-
     if [[ -z $user ]]; then
         echo "Please provide the username of the general os user"
         exit 1
@@ -79,8 +70,6 @@ export -f validate
 
 function setup() {
     $script_dir/../docker/install-docker.sh -u $user
-    # docker load -i $micro_ei_docker_image
-    # Add Netty Host to /etc/hosts
     echo "$netty_host netty" >>/etc/hosts
 }
 export -f setup

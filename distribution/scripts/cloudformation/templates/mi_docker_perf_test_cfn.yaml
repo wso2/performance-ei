@@ -17,8 +17,8 @@
 #}
 {% extends "common_perf_test_cfn.yaml" %}
 {% block parameters -%}
-  WSO2EnterpriseIntegratorInstanceType:
-    Description: EI EC2 instance type
+  WSO2MicroIntegratorInstanceType:
+    Description: MI EC2 instance type
     Type: String
   BackendInstanceType:
     Description: Backend EC2 instance type
@@ -39,7 +39,7 @@
   -a jmeter{{ i }} -n ${JMeterServer{{ i }}Instance.PrivateIp} \
   {%- endfor %}
   {%- endif %}
-  -a ei -n ${WSO2EnterpriseIntegratorInstance.PrivateIp} \
+  -a mi -n ${WSO2MicroIntegratorInstance.PrivateIp} \
   -a netty -n ${BackendInstance.PrivateIp}
 {%- endcall %}
 {%- if jmeter_servers >= 2 %}
@@ -51,10 +51,10 @@
 {%- endcall %}
 {% endfor -%}
 {%- endif %}
-# EI
-{% call ec2instance('WSO2EnterpriseIntegratorInstance', 'ei', '!Ref WSO2EnterpriseIntegratorInstanceType',
+# MI
+{% call ec2instance('WSO2MicroIntegratorInstance', 'mi', '!Ref WSO2MicroIntegratorInstanceType',
   files=[{'name': 'jdk-8-linux-x64.tar.gz', 'ref': 'OracleJDKDistributionName'}]) -%}
-/home/ubuntu/setup/setup-microei.sh -n ${BackendInstance.PrivateIp} -u ubuntu
+/home/ubuntu/setup/setup-mi-docker.sh -n ${BackendInstance.PrivateIp} -u ubuntu
 {%- endcall %}
 # Backend
 {% call ec2instance('BackendInstance', 'backend', '!Ref BackendInstanceType',

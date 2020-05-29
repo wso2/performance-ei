@@ -14,21 +14,19 @@
 # limitations under the License.
 #
 # ----------------------------------------------------------------------------
-# Start WSO2 Enterprise Micro Integrator
+# Start WSO2 Micro Integrator Docker
 # ----------------------------------------------------------------------------
 script_dir=$(dirname "$0")
 default_heap_size="1G"
 heap_size="$default_heap_size"
 cpus=""
 memory=""
-wso2_ei_version=""
-default_server_type="microei"
-server_type="$default_server_type"
+wso2_mi_version=""
 
 function usage() {
     echo ""
     echo "Usage: "
-    echo "$0 -c <cpus> -r <memory> -v <wso2_ei_version> [-m <heap_size>] [-a <server_type>] [-h]"
+    echo "$0 -c <cpus> -r <memory> -v <wso2_mi_version> [-m <heap_size>] [-h]"
     echo "-c: Number of CPU resources to be used by the container."
     echo "-r: The maximum amount of memory the container can use."
     echo "-v: WSO2 Micro Integrator Integrator version."
@@ -46,7 +44,7 @@ while getopts "c:r:v:m:h" opt; do
         memory=${OPTARG}
         ;;
     v)
-        wso2_ei_version=${OPTARG}
+        wso2_mi_version=${OPTARG}
         ;;
     m)
         heap_size=${OPTARG}
@@ -73,8 +71,8 @@ if [[ -z $memory ]]; then
     exit 1
 fi
 
-if [[ -z $wso2_ei_version ]]; then
-    echo "Please provide WSO2 Enterprise Integrator version."
+if [[ -z $wso2_mi_version ]]; then
+    echo "Please provide WSO2 Micro Integrator version."
     exit 1
 fi
 
@@ -89,7 +87,7 @@ echo "Setting Heap to ${heap_size}"
 JVM_MEM_OPTS="JVM_MEM_OPTS=-Xms${heap_size} -Xmx${heap_size}"
 
 echo "Enabling GC Logs"
-JAVA_OPTS="JAVA_OPTS=-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/home/wso2carbon/wso2ei-${wso2_ei_version}/wso2/micro-integrator/repository/logs/gc.log"
+JAVA_OPTS="JAVA_OPTS=-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/home/wso2carbon/wso2mi-${wso2_mi_version}/wso2/micro-integrator/repository/logs/gc.log"
 
 if [[ ! -d ${HOME}/logs ]]; then
     mkdir -p ${HOME}/logs
@@ -106,10 +104,10 @@ capp_dir=$script_dir/capp/
 
 set -x
 docker run --name=microei -d -p 8290:8290 -p 9201:9201 -p 8253:8253 --add-host=netty:$netty_host --cpus=${cpus} --memory=${memory} \
-        --volume $(realpath $capp_dir):/home/wso2carbon/wso2mi-${wso2_ei_version}/repository/deployment/server/carbonapps \
-        --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2mi-${wso2_ei_version}/repository/logs/wso2carbon.log \
-        --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2mi-${wso2_ei_version}/repository/logs/gc.log \
-        -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2/wso2mi:${wso2_ei_version}
+        --volume $(realpath $capp_dir):/home/wso2carbon/wso2mi-${wso2_mi_version}/repository/deployment/server/carbonapps \
+        --volume ${HOME}/logs/wso2carbon.log:/home/wso2carbon/wso2mi-${wso2_mi_version}/repository/logs/wso2carbon.log \
+        --volume ${HOME}/logs/gc.log:/home/wso2carbon/wso2mi-${wso2_mi_version}/repository/logs/gc.log \
+        -e "${JVM_MEM_OPTS}" -e "${JAVA_OPTS}" wso2/wso2mi:${wso2_mi_version}
 
 echo "Waiting for MI to start."
 
@@ -118,7 +116,7 @@ n=0
 until [ $n -ge 60 ]; do
    response_code=$(curl -s -w '%{http_code}' -o /dev/null http://localhost:9201/healthz || echo "")
    if [ $response_code -eq 200 ]; then
-       echo "MI started"
+       echo "MI container is up and running"
        exit_status=0
        break
    fi
@@ -126,6 +124,6 @@ until [ $n -ge 60 ]; do
    n=$(($n + 1))
 done
 
-# Wait for 10 seconds to make sure that the server is ready to accept API requests.
-sleep 10
+# Wait for 5 seconds to make sure that the server is ready to accept API requests.
+sleep 5
 exit $exit_status
