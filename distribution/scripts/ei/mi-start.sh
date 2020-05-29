@@ -103,7 +103,7 @@ n=0
 until [ $n -ge 60 ]; do
    response_code=$(curl -s -w '%{http_code}' -o /dev/null http://localhost:9201/healthz || echo "")
    if [ $response_code -eq 200 ]; then
-       echo "MI started"
+       echo "MI is up and running"
        exit_status=0
        break
    fi
@@ -111,6 +111,6 @@ until [ $n -ge 60 ]; do
    n=$(($n + 1))
 done
 
-# Wait for another 10 seconds to make sure that the server is ready to accept API requests.
+# Wait for another 5 seconds to make sure that the server is ready to accept API requests.
 sleep 5
 exit $exit_status

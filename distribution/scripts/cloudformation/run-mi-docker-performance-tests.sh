@@ -33,7 +33,7 @@ export run_performance_tests_script_name="run-mi-docker-performance-tests.sh"
 export wso2mi_ec2_instance_type=""
 
 function usageCommand() {
-    echo "-E <wso2mi_ec2_instance_type>"
+    echo "-E <wso2mi_ec2_instance_type> -V <product_version>"
 }
 export -f usageCommand
 

@@ -23,8 +23,8 @@ script_dir=$(dirname "$0")
 . $script_dir/perf-test-common.sh "${ARGS[@]}"
 
 function initialize() {
-    export ei_ssh_host=ei
-    export ei_host=$(get_ssh_hostname $ei_ssh_host)
+    export mi_ssh_host=mi
+    export mi_host=$(get_ssh_hostname $mi_ssh_host)
 }
 export -f initialize
 
@@ -36,7 +36,7 @@ function before_execute_test_scenario() {
     local protocol=${scenario[protocol]}
     local response_pattern="soapenv:Body"
 
-    jmeter_params+=("host=$ei_host" "path=$service_path" "response_pattern=${response_pattern}")
+    jmeter_params+=("host=$mi_host" "path=$service_path" "response_pattern=${response_pattern}")
     jmeter_params+=("response_size=${msize}B" "protocol=$protocol")
 
     if [[ "${scenario[name]}" == "SecureProxy" ]]; then
@@ -48,13 +48,13 @@ function before_execute_test_scenario() {
     fi
 
     echo "Starting Micro Integrator..."
-    ssh $ei_ssh_host "./ei/mi-start.sh -m $heap"
+    ssh $mi_ssh_host "./ei/mi-start.sh -m $heap"
 }
 
 function after_execute_test_scenario() {
-    write_server_metrics ei $ei_ssh_host carbon
-    download_file $ei_ssh_host wso2mi/repository/logs/wso2carbon.log wso2carbon.log
-    download_file $ei_ssh_host wso2mi/repository/logs/gc.log ei_gc.log
+    write_server_metrics mi $mi_ssh_host carbon
+    download_file $mi_ssh_host wso2mi/repository/logs/wso2carbon.log wso2carbon.log
+    download_file $mi_ssh_host wso2mi/repository/logs/gc.log mi_gc.log
 }
 
 test_scenarios

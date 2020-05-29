@@ -24,31 +24,36 @@ export script_dir=$(dirname "$0")
 
 export aws_cloudformation_template_filename="mi_perf_test_cfn.yaml"
 export application_name="WSO2 Micro Integrator"
-export ec2_instance_name="ei"
-export metrics_file_prefix="ei"
+export product_version=""
+export ec2_instance_name="mi"
+export metrics_file_prefix="mi"
 export run_performance_tests_script_name="run-mi-performance-tests.sh"
 
-export wso2ei_distribution=""
-export wso2ei_ec2_instance_type=""
+export wso2mi_distribution=""
+export wso2mi_ec2_instance_type=""
 
 function usageCommand() {
-    echo "-e <wso2ei_distribution> -E <wso2ei_ec2_instance_type>"
+    echo "-e <wso2mi_distribution> -E <wso2mi_ec2_instance_type -V <product_version>"
 }
 export -f usageCommand
 
 function usageHelp() {
     echo "-e: $application_name Distribution."
     echo "-E: Amazon EC2 Instance Type for $application_name."
+    echo "-V: Product version for $application_name."
 }
 export -f usageHelp
 
-while getopts ":u:f:d:k:n:j:o:g:s:b:r:J:S:N:t:p:w:he:E:" opt; do
+while getopts ":u:f:d:k:n:j:o:g:s:b:r:J:S:N:t:p:w:he:E:V:" opt; do
     case "${opt}" in
     e)
-        wso2ei_distribution=${OPTARG}
+        wso2mi_distribution=${OPTARG}
         ;;
     E)
-        wso2ei_ec2_instance_type=${OPTARG}
+        wso2mi_ec2_instance_type=${OPTARG}
+        ;;
+    V)
+        product_version=${OPTARG}
         ;;
     *)
         opts+=("-${opt}")
@@ -59,39 +64,46 @@ done
 shift "$((OPTIND - 1))"
 
 function validate() {
-    if [[ ! -f $wso2ei_distribution ]]; then
+    if [[ ! -f $wso2mi_distribution ]]; then
         echo "Please provide $application_name distribution."
         exit 1
     fi
 
-    export wso2ei_distribution_filename=$(basename $wso2ei_distribution)
+    export wso2mi_distribution_filename=$(basename $wso2mi_distribution)
 
-    if [[ ${wso2ei_distribution_filename: -4} != ".zip" ]]; then
+    if [[ ${wso2mi_distribution_filename: -4} != ".zip" ]]; then
         echo "$application_name distribution must have .zip extension"
         exit 1
     fi
 
-    if [[ -z $wso2ei_ec2_instance_type ]]; then
+    if [[ -z $wso2mi_ec2_instance_type ]]; then
         echo "Please provide the Amazon EC2 Instance Type for $application_name."
+        exit 1
+    fi
+        
+    if [[ -z $product_version ]]; then
+        echo "Please provide the version for $application_name."
         exit 1
     fi
 }
 export -f validate
 
+export application_name=$application_name" "$product_version
+
 function create_links() {
-    wso2ei_distribution=$(realpath $wso2ei_distribution)
-    ln -s $wso2ei_distribution $temp_dir/$wso2ei_distribution_filename
+    wso2mi_distribution=$(realpath $wso2mi_distribution)
+    ln -s $wso2mi_distribution $temp_dir/$wso2mi_distribution_filename
 }
 export -f create_links
 
 function get_test_metadata() {
-    echo "wso2ei_ec2_instance_type=$wso2ei_ec2_instance_type"
+    echo "wso2mi_ec2_instance_type=$wso2mi_ec2_instance_type"
 }
 export -f get_test_metadata
 
 function get_cf_parameters() {
-    echo "WSO2EnterpriseIntegratorDistributionName=$wso2ei_distribution_filename"
-    echo "WSO2EnterpriseIntegratorInstanceType=$wso2ei_ec2_instance_type"
+    echo "WSO2MicroIntegratorDistributionName=$wso2mi_distribution_filename"
+    echo "WSO2MicroIntegratorInstanceType=$wso2mi_ec2_instance_type"
 }
 export -f get_cf_parameters
 

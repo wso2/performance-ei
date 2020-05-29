@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 # ----------------------------------------------------------------------------
-# Setup WSO2 Enterprise Integrator
+# Setup WSO2 Micro Integrator
 # ----------------------------------------------------------------------------
 # Make sure the script is running as root.
 if [ "$UID" -ne "0" ]; then
@@ -25,7 +25,7 @@ fi
 
 export script_dir=$(dirname "$0")
 export netty_host=""
-export ei_product=""
+export mi_product=""
 export user=""
 export oracle_jdk_dist=""
 # Default value for product extraction directory
@@ -45,7 +45,7 @@ while getopts "hn:d:u:j:" opt; do
         netty_host=${OPTARG}
         ;;
     d)
-        ei_product=${OPTARG}
+        mi_product=${OPTARG}
         ;;
     u)
         user=${OPTARG}
@@ -72,7 +72,7 @@ validate() {
         exit 1
     fi
 
-    if [[ ! -f $ei_product ]]; then
+    if [[ ! -f $mi_product ]]; then
         echo "Product not provided. Please provide the MI product."
         exit 1
     fi
@@ -92,15 +92,15 @@ function setup() {
 
     pushd ${install_dir}
 
-    #Remove Enterprise Integrator if it is already there
+    #Remove Micro Integrator if it is already there
     if [[ -d wso2mi ]]; then
         sudo -u $user rm -rf wso2mi
     fi
 
     #Extract the downloaded zip
-    echo "Extracting WSO2 Enterprise Integrator"
-    dirname=$(unzip -Z -1 $ei_product | head -1 | sed -e 's@/.*@@')
-    sudo -u $user unzip -q -o $ei_product
+    echo "Extracting WSO2 Micro Integrator"
+    dirname=$(unzip -Z -1 $mi_product | head -1 | sed -e 's@/.*@@')
+    sudo -u $user unzip -q -o $mi_product
     sudo -u $user mv -v $dirname wso2mi
     echo "Enterprise Integrator is extracted"
 
@@ -120,7 +120,7 @@ function setup() {
     echo "$netty_host netty" >>/etc/hosts
 
     popd
-    echo "Completed Enterprise Integrator setup..."
+    echo "Completed Micro Integrator setup..."
 }
 export -f setup
 

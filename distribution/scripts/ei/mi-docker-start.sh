@@ -87,7 +87,7 @@ echo "Setting Heap to ${heap_size}"
 JVM_MEM_OPTS="JVM_MEM_OPTS=-Xms${heap_size} -Xmx${heap_size}"
 
 echo "Enabling GC Logs"
-JAVA_OPTS="JAVA_OPTS=-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/home/wso2carbon/wso2mi-${wso2_mi_version}/wso2/micro-integrator/repository/logs/gc.log"
+JAVA_OPTS="JAVA_OPTS=-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/home/wso2carbon/wso2mi-${wso2_mi_version}/repository/logs/gc.log"
 
 if [[ ! -d ${HOME}/logs ]]; then
     mkdir -p ${HOME}/logs
