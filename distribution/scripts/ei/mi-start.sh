@@ -101,7 +101,7 @@ exit_status=100
 
 n=0
 until [ $n -ge 60 ]; do
-   response_code=$(curl -s -w '%{http_code}' -o /dev/null http://localhost:9201/healthz || echo "")
+   response_code=$(curl -s -w '%{http_code}' -o /dev/null http://localhost:9201/metric-service/metrics || echo "")
    if [ $response_code -eq 200 ]; then
        echo "MI is up and running"
        exit_status=0
