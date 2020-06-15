@@ -93,7 +93,7 @@ echo "Enabling GC Logs"
 export JAVA_OPTS="-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:$product_path/repository/logs/gc.log"
 
 echo "Starting MI"
-$startup_script start
+$startup_script start -DenablePrometheusApi=true
 
 echo "Waiting for MI to start"
 
