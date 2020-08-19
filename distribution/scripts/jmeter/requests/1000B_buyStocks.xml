@@ -1,6 +1,11 @@
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
 <soapenv:Header><routing xmlns="http://someuri">xadmin;server1;community#1.0##</routing></soapenv:Header>
 <soapenv:Body><m:buyStocks xmlns:m="http://services.samples/xsd">
+<order><symbol>N</symbol><buyerID>n</buyerID><price>1.0</price><volume>1</volume></order>
+<order><symbol>SUN</symbol><buyerID>indika</buyerID><price>14.56</price><volume>500</volume></order>
+<order><symbol>MSFT</symbol><buyerID>doe</buyerID><price>23.56</price><volume>8030</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>2000</volume></order>
+<order><symbol>N</symbol><buyerID>n</buyerID><price>1.0</price><volume>1</volume></order>
 <order><symbol>SUN</symbol><buyerID>indika</buyerID><price>14.56</price><volume>500</volume></order>
 <order><symbol>MSFT</symbol><buyerID>doe</buyerID><price>23.56</price><volume>8030</volume></order>
 </m:buyStocks></soapenv:Body></soapenv:Envelope>
