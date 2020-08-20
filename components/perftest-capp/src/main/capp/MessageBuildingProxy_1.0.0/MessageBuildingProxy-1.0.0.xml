@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="MessageBuildingProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <payloadFactory media-type="xml">
+                <format>
+                    <payload xmlns="">$1</payload>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="$body//*"/>
+                </args>
+            </payloadFactory>
+            <call>
+                <endpoint key="RealService"/>
+            </call>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>
