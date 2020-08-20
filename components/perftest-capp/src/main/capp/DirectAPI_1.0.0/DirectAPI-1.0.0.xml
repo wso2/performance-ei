@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/directApi" name="DirectAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST">
+        <inSequence>
+            <call>
+                <endpoint key="RealService"/>
+            </call>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>

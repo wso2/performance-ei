@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# 249 bytes
+writeHead(){
+    echo "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">
+    <soapenv:Header><routing xmlns=\"http://someuri\">xadmin;server1;community#1.0##</routing></soapenv:Header>
+    <soapenv:Body><m:buyStocks xmlns:m=\"http://services.samples/xsd\">" > $1
+}
+
+# 47 bytes
+writeTail() {
+    echo "</m:buyStocks></soapenv:Body></soapenv:Envelope>" >> $1
+}
+
+# 101 bytes
+writeIBM(){
+    echo "<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>2000</volume></order>" >> $1
+}
+
+# 100 bytes
+writeMSFT(){
+    echo "<order><symbol>MSFT</symbol><buyerID>doe</buyerID><price>23.56</price><volume>8030</volume></order>" >> $1
+}
+
+# 101 bytes
+writeSUN(){
+    echo "<order><symbol>SUN</symbol><buyerID>indika</buyerID><price>14.56</price><volume>500</volume></order>" >> $1
+}
+
+# 90 bytes
+writeSimple(){
+    echo "<order><symbol>N</symbol><buyerID>n</buyerID><price>1.0</price><volume>1</volume></order>" >> $1
+}
+
+writeSymbol(){
+
+    mod=`expr $1 % 4`
+    #echo "mod value ========= $mod"
+    if [ $mod -eq 0 ]
+    then
+        writeIBM "$2"
+        accumulatedSize=`expr $accumulatedSize + $IBM`
+    elif [ $mod -eq 1 ]
+    then
+        writeMSFT "$2"
+        accumulatedSize=`expr $accumulatedSize + $MSFT`
+    elif [ $mod -eq 2 ]
+    then
+        writeSUN "$2"
+        accumulatedSize=`expr $accumulatedSize + $SUN`
+    else
+        writeSimple "$2"
+        accumulatedSize=`expr $accumulatedSize + $Simple`
+    fi
+}
+
+#################### START ###########################
+
+size=$1
+file_name=$1B_buyStocks.xml
+headAndTail=298
+IBM=101
+MSFT=100
+SUN=101
+Simple=90
+minPayloadSymbolSize=98 ## Avg size
+reamainingSize=`expr $size - $headAndTail`
+minPayloadSize=`expr $minPayloadSymbolSize + $headAndTail`
+accumulatedSize=$headAndTail
+
+if [[ "$reamainingSize" -lt "$minPayloadSymbolSize" ]]; then
+    echo "Provided size is less than minimum payload size $minPayloadSize bytes"
+    exit 0
+fi
+
+symbol_repetition=`expr $reamainingSize / $minPayloadSymbolSize`
+
+echo "Creating file ..."
+
+writeHead "$file_name"
+
+while [ "$symbol_repetition" !=  "0" ]
+do
+    writeSymbol "$symbol_repetition" "$file_name"
+    symbol_repetition=`expr $symbol_repetition - 1`
+done
+
+writeTail "$file_name"
+
+echo "File Name          : $file_name"
+echo "Size requested     : $size bytes"
+echo "Size created       : $accumulatedSize bytes"
+echo "Difference         : `expr $size - $accumulatedSize` bytes"
+
+#################### END ###########################

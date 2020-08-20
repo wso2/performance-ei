@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="CloneAndAggregateWithFourBackendProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <clone id="perf">
+                <target endpoint="RealService"/>
+                <target endpoint="RealService"/>
+                <target endpoint="RealService"/>
+                <target endpoint="RealService"/>
+            </clone>
+        </inSequence>
+        <outSequence>
+            <property name="info" scope="default">
+                <Aggregated/>
+            </property>
+            <aggregate id="perf">
+                <completeCondition>
+                    <messageCount max="4" min="4"/>
+                </completeCondition>
+                <onComplete aggregateElementType="root" enclosingElementProperty="info" expression="$body/*[1]">
+                    <send/>
+                </onComplete>
+            </aggregate>
+        </outSequence>
+        <faultSequence/>
+    </target>
+</proxy>
