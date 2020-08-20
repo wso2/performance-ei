@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="EnrichBackAndForthProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <enrich>
+                <source clone="true" type="body"/>
+                <target property="REQUEST_PAYLOAD" type="property"/>
+            </enrich>
+            <payloadFactory media-type="xml">
+                <format>
+                    <hello xmlns="">world</hello>
+                </format>
+                <args/>
+            </payloadFactory>
+            <call>
+                <endpoint key="RealService"/>
+            </call>
+            <enrich>
+                <source clone="true" property="REQUEST_PAYLOAD" type="property"/>
+                <target type="body"/>
+            </enrich>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>
