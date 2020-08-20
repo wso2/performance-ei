@@ -106,3 +106,13 @@ declare -A test_scenario10=(
     [use_backend]=true
     [skip]=false
 )
+declare -A test_scenario11=(
+    [name]="DirectAPI"
+    [display_name]="Direct API"
+    [description]="Passthrough API service"
+    [path]="/directApi"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
