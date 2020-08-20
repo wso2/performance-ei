@@ -20,7 +20,7 @@
 # ----------------------------------------------------------------------------
 
 # Message Sizes in bytes for sample payloads
-declare -a available_message_sizes=("500" "1024" "5120" "10240" "102400" "512000")
+declare -a available_message_sizes=("500" "1000" "10000" "100000" "200000" "500000" "1000000")
 
 # Verifying if payloads for each message size exists in the 'requests' directory
 function verifyRequestPayloads() {
