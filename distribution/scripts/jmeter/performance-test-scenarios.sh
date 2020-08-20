@@ -116,3 +116,54 @@ declare -A test_scenario11=(
     [use_backend]=true
     [skip]=false
 )
+declare -A test_scenario12=(
+    [name]="MessageBuildingProxy"
+    [display_name]="Message Building Proxy"
+    [description]="Message Building Proxy service"
+    [path]="/services/MessageBuildingProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+declare -A test_scenario14=(
+    [name]="CloneAndAggregateWithTwoBackendProxy"
+    [display_name]="Clone & Aggregate With 2 Backend Proxy"
+    [description]="Clone payload and send to 2 backends and aggregate the response back"
+    [path]="/services/CloneAndAggregateWithTwoBackendProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+declare -A test_scenario15=(
+    [name]="CloneAndAggregateWithFourBackendProxy"
+    [display_name]="Clone & Aggregate With 4 Backend Proxy"
+    [description]="Clone payload and send to 4 backends and aggregate the response back"
+    [path]="/services/CloneAndAggregateWithTwoBackendProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+declare -A test_scenario16=(
+    [name]="CloneAndAggregateWithEightBackendProxy"
+    [display_name]="Clone & Aggregate With 8 Backend Proxy"
+    [description]="Clone payload and send to 8 backends and aggregate the response back"
+    [path]="/services/CloneAndAggregateWithTwoBackendProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+declare -A test_scenario16=(
+    [name]="EnrichBackAndForthProxy"
+    [display_name]="Enrich Back & Forth Proxy"
+    [description]="Enrich payload to a property and enrich back in the response"
+    [path]="/services/EnrichBackAndForthProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+
