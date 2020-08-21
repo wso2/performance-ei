@@ -43,6 +43,8 @@ function verifyIteratePayloads() {
     done
 }
 
+echo "ARUNAN - test 4"
+
 verifyRequestPayloads "${available_message_sizes[@]}"
 verifyRequestPayloads "${message_sizes_array[@]}"
 
@@ -230,3 +232,5 @@ declare -A test_scenario22=(
     [use_backend]=true
     [skip]=false
 )
+
+echo "ARUNAN - test 5"
