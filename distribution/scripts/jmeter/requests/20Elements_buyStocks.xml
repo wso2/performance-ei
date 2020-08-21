@@ -1,4 +1,14 @@
 <m:buyStocks xmlns:m="http://services.samples/xsd">
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>20</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>19</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>18</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>17</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>16</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>15</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>14</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>13</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>12</volume></order>
+<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>11</volume></order>
 <order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>10</volume></order>
 <order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>9</volume></order>
 <order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>8</volume></order>
