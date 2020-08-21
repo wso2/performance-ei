@@ -21,6 +21,7 @@
 
 # Message Sizes in bytes for sample payloads
 declare -a available_message_sizes=("500" "1000" "10000" "100000" "200000" "500000" "1000000")
+declare -a available_message_iterations=("5" "10" "20" "50" "100")
 
 # Verifying if payloads for each message size exists in the 'requests' directory
 function verifyRequestPayloads() {
@@ -32,8 +33,21 @@ function verifyRequestPayloads() {
     done
 }
 
+# Verifying if payloads for each message size exists in the 'requests' directory
+function verifyIteratePayloads() {
+    for i in "$@"; do
+        if ! ls $script_dir/requests/${i}Elements_buyStocks*.xml 1>/dev/null 2>&1; then
+            echo "ERROR: Payload file for $i elements is missing!"
+            exit 1
+        fi
+    done
+}
+
 verifyRequestPayloads "${available_message_sizes[@]}"
 verifyRequestPayloads "${message_sizes_array[@]}"
+
+verifyIteratePayloads "${message_iteratations_array[@]}"
+verifyIteratePayloads ${message_iteratations_array[@]}"
 
 # Test scenarios
 declare -A test_scenario0=(
@@ -156,11 +170,66 @@ declare -A test_scenario16=(
     [use_backend]=true
     [skip]=false
 )
-declare -A test_scenario16=(
+declare -A test_scenario17=(
     [name]="EnrichBackAndForthProxy"
     [display_name]="Enrich Back & Forth Proxy"
     [description]="Enrich payload to a property and enrich back in the response"
     [path]="/services/EnrichBackAndForthProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+
+declare -A test_scenario18=(
+    [name]="IterateAndAggregateProxy"
+    [display_name]="Iterate and Aggregate Proxy"
+    [description]="Iterate over a payload and call backend and aggregate the response"
+    [path]="/services/IterateAndAggregateProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+
+declare -A test_scenario19=(
+    [name]="XSLTTransformProxy"
+    [display_name]="XSLT Transform Proxy"
+    [description]="Do a XSLT Transformation"
+    [path]="/services/XSLTTransformProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+
+declare -A test_scenario20=(
+    [name]="DatamapperProxy"
+    [display_name]="Datamapper Transform Proxy"
+    [description]="Do a XML transformation same as XSLTTransformProxy"
+    [path]="/services/DatamapperProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+
+declare -A test_scenario21=(
+    [name]="PayloadFactoryWith20ElementsProxy"
+    [display_name]="PayloadFactory with 20 Elements Proxy"
+    [description]="Do a XML transformation same as XSLTTransformProxy"
+    [path]="/services/PayloadFactoryWith20ElementsProxy"
+    [jmx]="ei-test.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
+
+declare -A test_scenario21=(
+    [name]="PayloadFactoryWith50ElementsProxy"
+    [display_name]="PayloadFactory with 50 Elements Proxy"
+    [description]="Do a XML transformation same as XSLTTransformProxy"
+    [path]="/services/PayloadFactoryWith50ElementsProxy"
     [jmx]="ei-test.jmx"
     [protocol]="http"
     [use_backend]=true
