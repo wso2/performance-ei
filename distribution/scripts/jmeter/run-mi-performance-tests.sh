@@ -42,13 +42,13 @@ function before_execute_test_scenario() {
     if [[ "${scenario[name]}" == "SecureProxy" ]]; then
         jmeter_params+=("port=8253")
         jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks_secure.xml")
-    elif [[ "${scenario[name]}" == "XSLTTransformProxy" -o "${scenario[name]}" == "DatamapperProxy" -o "${scenario[name]}" == "IterateAndAggregateProxy"]] then
+    elif [[ "${scenario[name]}" == "XSLTTransformProxy" || "${scenario[name]}" == "DatamapperProxy" || "${scenario[name]}" == "IterateAndAggregateProxy" ]]; then
         jmeter_params+=("port=8290")
         jmeter_params+=("payload=$HOME/jmeter/requests/${iteratecount}Elements_buyStocks.xml")
-    elif [[ "${scenario[name]}" == "PayloadFactoryWith20ElementsProxy"]] then
+    elif [[ "${scenario[name]}" == "PayloadFactoryWith20ElementsProxy" ]]; then
         jmeter_params+=("port=8290")
         jmeter_params+=("payload=$HOME/jmeter/requests/20Elements_buyStocks.xml")
-    elif [[ "${scenario[name]}" == "PayloadFactoryWith50ElementsProxy"]] then
+    elif [[ "${scenario[name]}" == "PayloadFactoryWith50ElementsProxy" ]]; then
         jmeter_params+=("port=8290")
         jmeter_params+=("payload=$HOME/jmeter/requests/50Elements_buyStocks.xml")
     else

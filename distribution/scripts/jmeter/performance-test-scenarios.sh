@@ -47,7 +47,7 @@ verifyRequestPayloads "${available_message_sizes[@]}"
 verifyRequestPayloads "${message_sizes_array[@]}"
 
 verifyIteratePayloads "${message_iteratations_array[@]}"
-verifyIteratePayloads ${message_iteratations_array[@]}"
+verifyIteratePayloads "${message_iteratations_array[@]}"
 
 # Test scenarios
 declare -A test_scenario0=(
@@ -180,7 +180,6 @@ declare -A test_scenario17=(
     [use_backend]=true
     [skip]=false
 )
-
 declare -A test_scenario18=(
     [name]="IterateAndAggregateProxy"
     [display_name]="Iterate and Aggregate Proxy"
@@ -191,7 +190,6 @@ declare -A test_scenario18=(
     [use_backend]=true
     [skip]=false
 )
-
 declare -A test_scenario19=(
     [name]="XSLTTransformProxy"
     [display_name]="XSLT Transform Proxy"
@@ -202,7 +200,6 @@ declare -A test_scenario19=(
     [use_backend]=true
     [skip]=false
 )
-
 declare -A test_scenario20=(
     [name]="DatamapperProxy"
     [display_name]="Datamapper Transform Proxy"
@@ -213,7 +210,6 @@ declare -A test_scenario20=(
     [use_backend]=true
     [skip]=false
 )
-
 declare -A test_scenario21=(
     [name]="PayloadFactoryWith20ElementsProxy"
     [display_name]="PayloadFactory with 20 Elements Proxy"
@@ -224,8 +220,7 @@ declare -A test_scenario21=(
     [use_backend]=true
     [skip]=false
 )
-
-declare -A test_scenario21=(
+declare -A test_scenario22=(
     [name]="PayloadFactoryWith50ElementsProxy"
     [display_name]="PayloadFactory with 50 Elements Proxy"
     [description]="Do a XML transformation same as XSLTTransformProxy"
@@ -235,4 +230,3 @@ declare -A test_scenario21=(
     [use_backend]=true
     [skip]=false
 )
-
