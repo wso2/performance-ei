@@ -1,0 +1,35 @@
+map_S_Envelope_S_Envelope = function(){ 
+var outputsoapenv_Envelope={};
+
+var count_i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d = 0;
+outputsoapenv_Envelope =  {};
+outputsoapenv_Envelope.soapenv_Header =  {};
+outputsoapenv_Envelope.soapenv_Header.routing =  {};
+outputsoapenv_Envelope.soapenv_Header.routing.content = inputsoapenv_Envelope.soapenv_Header.routing.content;
+outputsoapenv_Envelope.soapenv_Body =  {};
+outputsoapenv_Envelope.soapenv_Body.m_buyStocks =  {};
+outputsoapenv_Envelope.soapenv_Body.m_buyStocks.order =  [];
+
+for(i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d in inputsoapenv_Envelope.soapenv_Body.m_buyStocks.order){
+outputsoapenv_Envelope.soapenv_Body.m_buyStocks.order[count_i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d] =  {};
+outputsoapenv_Envelope.soapenv_Body.m_buyStocks.order[count_i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d].symbol = 'XYZ';
+outputsoapenv_Envelope.soapenv_Body.m_buyStocks.order[count_i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d].buyerID = inputsoapenv_Envelope.soapenv_Body.m_buyStocks.order[i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d].buyerID;
+outputsoapenv_Envelope.soapenv_Body.m_buyStocks.order[count_i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d].price = inputsoapenv_Envelope.soapenv_Body.m_buyStocks.order[i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d].price;
+outputsoapenv_Envelope.soapenv_Body.m_buyStocks.order[count_i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d].volume = inputsoapenv_Envelope.soapenv_Body.m_buyStocks.order[i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d].volume;
+
+count_i_order_4d726c35_c54d_4cc6_a302_2c9fc981f93d++;
+}
+return outputsoapenv_Envelope;
+};
+
+
+
+
+
+
+
+
+
+
+
+

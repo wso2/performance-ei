@@ -24,5 +24,12 @@
         <dependency artifact="XSLTEnhancedProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="XSLTProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="EchoApi" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="XSLT_Datatransform" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="DMPerfTest" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="DMPerfTest_inputSchema" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="DMPerfTest_outputSchema" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="DMPerfTest_xsltStyleSheet" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="XSLTTransformProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="DatamapperProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
     </artifact>
 </artifacts>
