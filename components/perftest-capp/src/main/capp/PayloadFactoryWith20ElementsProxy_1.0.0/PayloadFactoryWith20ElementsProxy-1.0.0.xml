@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="PayloadFactoryWith20ElementsProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <payloadFactory media-type="xml">
+                <format>
+                    <m:buyStocks xmlns:m="http://services.samples/xsd">
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                        <order xmlns="">
+                            <symbol>$1</symbol>
+                            <buyerID>john</buyerID>
+                            <price>140.34</price>
+                            <volume>1</volume>
+                        </order>
+                    </m:buyStocks>
+                </format>
+                <args>
+                    <arg value="XYZ"/>
+                </args>
+            </payloadFactory>
+            <call>
+                <endpoint key="RealService"/>
+            </call>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>

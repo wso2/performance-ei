@@ -2,13 +2,11 @@
 
 
 writeHead(){
-echo "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">
-<soapenv:Header><routing xmlns=\"http://someuri\">xadmin;server1;community#1.0##</routing></soapenv:Header>
-<soapenv:Body><m:buyStocks xmlns:m=\"http://services.samples/xsd\">" > $1
+echo "<m:buyStocks xmlns:m=\"http://services.samples/xsd\">" > $1
 }
 
 writeTail() {
-    echo "</m:buyStocks></soapenv:Body></soapenv:Envelope>" >> $1
+    echo "</m:buyStocks>" >> $1
 }
 
 writeIBM(){
