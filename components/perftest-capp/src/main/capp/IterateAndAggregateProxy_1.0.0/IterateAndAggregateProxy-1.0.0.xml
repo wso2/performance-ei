@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="IterateAndAggregateProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <iterate expression="//order" id="perf">
+                <target>
+                    <sequence>
+                        <send>
+                            <endpoint key="RealService"/>
+                        </send>
+                    </sequence>
+                </target>
+            </iterate>
+        </inSequence>
+        <outSequence>
+            <property name="info" scope="default">
+                <Aggregated/>
+            </property>
+            <aggregate id="perf">
+                <completeCondition>
+                    <messageCount max="-1" min="-1"/>
+                </completeCondition>
+                <onComplete aggregateElementType="root" enclosingElementProperty="info" expression="$body/*[1]">
+                    <send/>
+                </onComplete>
+            </aggregate>
+        </outSequence>
+        <faultSequence/>
+    </target>
+</proxy>

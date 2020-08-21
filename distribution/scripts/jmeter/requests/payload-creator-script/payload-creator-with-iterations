@@ -1,0 +1,40 @@
+#!/bin/bash
+
+
+writeHead(){
+echo "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">
+<soapenv:Header><routing xmlns=\"http://someuri\">xadmin;server1;community#1.0##</routing></soapenv:Header>
+<soapenv:Body><m:buyStocks xmlns:m=\"http://services.samples/xsd\">" > $1
+}
+
+writeTail() {
+    echo "</m:buyStocks></soapenv:Body></soapenv:Envelope>" >> $1
+}
+
+writeIBM(){
+    echo "<order><symbol>IBM</symbol><buyerID>john</buyerID><price>140.34</price><volume>$2</volume></order>" >> $1
+}
+
+#################### START ###########################
+
+iterations=$1
+file_name=$1Elements_buyStocks.xml
+
+echo "Creating file ..."
+
+writeHead "$file_name"
+
+loop=$iterations
+
+while [ "$loop" !=  "0" ]
+do
+    writeIBM "$file_name" "$loop"
+    loop=`expr $loop - 1`
+done
+
+writeTail "$file_name"
+
+echo "File Name          : $file_name"
+echo "No. of elements     : $iterations"
+
+#################### END ###########################
