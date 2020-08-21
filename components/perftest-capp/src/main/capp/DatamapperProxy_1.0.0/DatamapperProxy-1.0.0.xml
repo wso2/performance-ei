@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="DatamapperProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <datamapper config="gov:datamapper/DMPerfTest.dmc" inputSchema="gov:datamapper/DMPerfTest_inputSchema.json" inputType="XML" outputSchema="gov:datamapper/DMPerfTest_outputSchema.json" outputType="XML" xsltStyleSheet="gov:datamapper/DMPerfTest_xsltStyleSheet.xml"/>
+            <call>
+                <endpoint key="RealService"/>
+            </call>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><artifact name="DatamapperProxy" version="1.0.0" type="synapse/proxy-service" serverRole="EnterpriseServiceBus">
+    <file>DatamapperProxy-1.0.0.xml</file>
+</artifact>

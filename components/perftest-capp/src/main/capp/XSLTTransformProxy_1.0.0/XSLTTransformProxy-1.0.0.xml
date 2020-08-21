@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="XSLTTransformProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <xslt key="conf:XSLT_Datatransform.xslt"/>
+            <call>
+                <endpoint key="RealService"/>
+            </call>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>
