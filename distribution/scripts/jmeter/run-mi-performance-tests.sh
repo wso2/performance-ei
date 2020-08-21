@@ -231,8 +231,8 @@ echo "ARUNAN - test 1"
 
 if [ ${#message_iteratations_array[@]} -eq 0 ]; then
     echo "ARUNAN - test 2"
-    test_scenarios_with_iterate_elements
+    test_scenarios
 else 
     echo "ARUNAN - test 3"
-    test_scenarios
+    test_scenarios_with_iterate_elements
 fi
