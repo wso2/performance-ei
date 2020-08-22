@@ -36,6 +36,12 @@ function before_execute_test_scenario() {
     local protocol=${scenario[protocol]}
     local response_pattern="soapenv:Body"
 
+    if [ ${#message_iteratations_array[@]} -eq 0 ]; then
+        response_pattern="soapenv:Body"
+    else 
+        response_pattern="m:buyStocks"
+    fi
+
     jmeter_params+=("host=$mi_host" "path=$service_path" "response_pattern=${response_pattern}")
     jmeter_params+=("response_size=${msize}B" "protocol=$protocol")
 
