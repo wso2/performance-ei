@@ -55,6 +55,10 @@ function before_execute_test_scenario() {
     elif [[ "${scenario[name]}" == "PayloadFactoryWith50ElementsProxy" ]]; then
         jmeter_params+=("port=8290")
         jmeter_params+=("payload=$HOME/jmeter/requests/50Elements_buyStocks.xml")
+    elif [[ "${scenario[name]}" == "PayloadFactoryWith100ElementsProxy" ]]; then
+        jmeter_params+=("port=8290")
+        jmeter_params+=("payload=$HOME/jmeter/requests/100Elements_buyStocks.xml")
+    
     else
         jmeter_params+=("port=8290")
         jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml")

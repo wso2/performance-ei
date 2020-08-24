@@ -232,5 +232,14 @@ declare -A test_scenario22=(
     [use_backend]=true
     [skip]=false
 )
+declare -A test_scenario23=(
+    [name]="PayloadFactoryWith100ElementsProxy"
+    [display_name]="PayloadFactory with 100 Elements Proxy"
+    [description]="Do a XML transformation same as XSLTTransformProxy"
+    [path]="/services/PayloadFactoryWith100ElementsProxy"
+    [jmx]="ei-test-without-soap.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
 
-echo "ARUNAN - test 5"
