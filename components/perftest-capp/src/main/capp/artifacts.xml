@@ -18,6 +18,7 @@
         <dependency artifact="CBRSOAPHeaderProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="PayloadFactoryWith20ElementsProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="PayloadFactoryWith50ElementsProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="PayloadFactoryWith100ElementsProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="CBRTransportHeaderProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="DirectProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="SecureProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
