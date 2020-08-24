@@ -34,12 +34,10 @@ export -f initialize
 function before_execute_test_scenario() {
     local service_path=${scenario[path]}
     local protocol=${scenario[protocol]}
-    local response_pattern="soapenv:Body"
+    local response_pattern="m:buyStocks"
 
     if [ ${#message_iteratations_array[@]} -eq 0 ]; then
-        response_pattern="soapenv:Body"
-    else 
-        response_pattern="m:buyStocks"
+        response_pattern="Aggregated"
     fi
 
     jmeter_params+=("host=$mi_host" "path=$service_path" "response_pattern=${response_pattern}")
