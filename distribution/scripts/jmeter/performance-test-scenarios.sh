@@ -43,8 +43,6 @@ function verifyIteratePayloads() {
     done
 }
 
-echo "ARUNAN - test 4"
-
 verifyRequestPayloads "${available_message_sizes[@]}"
 verifyRequestPayloads "${message_sizes_array[@]}"
 

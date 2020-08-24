@@ -77,21 +77,13 @@ function after_execute_test_scenario() {
 function test_scenarios_with_iterate_elements() {
     initialize_test
     local test_counter=0
-    echo "ARUNAN - test 6"
     for heap in ${heap_sizes_array[@]}; do
         declare -ng scenario
-        echo "ARUNAN - test 7"
-        echo ${#test_scenario[@]}
         for scenario in ${!test_scenario@}; do
-            echo "ARUNAN - test 11"
-            # echo $scenario
-            echo ${scenario[name]}
             local skip=${scenario[skip]}
-            echo $skip
             if [ $skip = true ]; then
                 continue
             fi
-            echo "ARUNAN - test 21"
             local scenario_name=${scenario[name]}
             local jmx_file=${scenario[jmx]}
             declare -a sleep_times_array
@@ -100,13 +92,9 @@ function test_scenarios_with_iterate_elements() {
             else
                 sleep_times_array=("-1")
             fi
-            echo "ARUNAN - test 12"
             for users in ${concurrent_users_array[@]}; do
-                echo "ARUNAN - test 8"
                 for iteratecount in ${message_iteratations_array[@]}; do
-                    echo "ARUNAN - test 9" 
                     for sleep_time in ${sleep_times_array[@]}; do
-                        echo "ARUNAN - test 10"
                         if [ "$estimate" = true ]; then
                             record_scenario_duration $scenario_name $(($test_duration + $estimated_processing_time_in_between_tests))
                             continue
@@ -235,12 +223,8 @@ function test_scenarios_with_iterate_elements() {
     done
 }
 
-echo "ARUNAN - test 1"
-
 if [ ${#message_iteratations_array[@]} -eq 0 ]; then
-    echo "ARUNAN - test 2"
     test_scenarios
 else 
-    echo "ARUNAN - test 3"
     test_scenarios_with_iterate_elements
 fi
