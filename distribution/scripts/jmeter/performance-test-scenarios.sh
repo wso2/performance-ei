@@ -240,4 +240,14 @@ declare -A test_scenario23=(
     [use_backend]=true
     [skip]=false
 )
+declare -A test_scenario24=(
+    [name]="JsonToSOAPProxy"
+    [display_name]="JSON to SOAP Transformation"
+    [description]="Convert JSON payload to SOAP format and send to the back end"
+    [path]="/services/JsonToSOAPProxy"
+    [jmx]="ei-test-json.jmx"
+    [protocol]="http"
+    [use_backend]=true
+    [skip]=false
+)
 
