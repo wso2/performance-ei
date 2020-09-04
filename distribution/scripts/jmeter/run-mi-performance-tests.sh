@@ -34,11 +34,7 @@ export -f initialize
 function before_execute_test_scenario() {
     local service_path=${scenario[path]}
     local protocol=${scenario[protocol]}
-    local response_pattern="m:buyStocks"
-
-    if [ ${#message_iteratations_array[@]} -eq 0 ]; then
-        response_pattern="Aggregated"
-    fi
+    local response_pattern="symbol"
 
     jmeter_params+=("host=$mi_host" "path=$service_path" "response_pattern=${response_pattern}")
     jmeter_params+=("response_size=${msize}B" "protocol=$protocol")

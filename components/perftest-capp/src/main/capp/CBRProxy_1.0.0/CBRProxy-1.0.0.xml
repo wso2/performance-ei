@@ -17,7 +17,7 @@
 <proxy name="CBRProxy" startOnLoad="true" transports="https http" xmlns="http://ws.apache.org/ns/synapse">
     <target>
         <inSequence>
-            <filter regex="IBM" source="//order[1]/symbol" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+            <filter regex=".*" source="//order[1]/symbol" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
                 <then>
                     <send>
                         <endpoint key="RealService"/>
