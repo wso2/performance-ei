@@ -13,6 +13,7 @@
         <dependency artifact="CloneAndAggregateWithTwoBackendProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="EnrichBackAndForthProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="DirectAPI" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
+        <dependency artifact="JsonToSOAPProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="MessageBuildingProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="IterateAndAggregateProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>
         <dependency artifact="CBRSOAPHeaderProxy" version="1.0.0" include="true" serverRole="EnterpriseServiceBus"/>

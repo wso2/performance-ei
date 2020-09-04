@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="JsonToSOAPProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <payloadFactory media-type="xml">
+                <format>
+                    <soapenv:Envelope xmlns:ns="http://www.viewstar.com/webservices/2002/11" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                           $1
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg evaluator="json" expression="$"/>
+                </args>
+            </payloadFactory>
+            <header name="Action" scope="default" value="dummy"/>
+            <call>
+                <endpoint key="RealService"/>
+            </call>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>

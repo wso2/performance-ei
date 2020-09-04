@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# 59 bytes
+writeHead(){
+    echo "{
+    \"payload\": {
+        \"symbol\": [
+            \"json\"," > $1
+}
+
+# 96-59 bytes
+writeTail() {
+    echo "            \"json\"
+        ]
+    }
+}" >> $1
+}
+
+# 20 bytes
+writeJSON(){
+    echo "            \"json\"," >> $1
+}
+
+
+writeSymbol(){
+
+   writeJSON "$2"
+   accumulatedSize=`expr $accumulatedSize + $JSON`
+}
+
+#################### START ###########################
+
+size=$1
+file_name=$1B_JSONPayload.json
+headAndTail=96
+JSON=20
+minPayloadSymbolSize=20 ## Avg size
+reamainingSize=`expr $size - $headAndTail`
+minPayloadSize=`expr $minPayloadSymbolSize + $headAndTail`
+accumulatedSize=$headAndTail
+
+if [[ "$reamainingSize" -lt "$minPayloadSymbolSize" ]]; then
+    echo "Provided size is less than minimum payload size $minPayloadSize bytes"
+    exit 0
+fi
+
+symbol_repetition=`expr $reamainingSize / $minPayloadSymbolSize`
+
+echo "Creating file ..."
+
+writeHead "$file_name"
+
+while [ "$symbol_repetition" !=  "0" ]
+do
+    writeSymbol "$symbol_repetition" "$file_name"
+    symbol_repetition=`expr $symbol_repetition - 1`
+done
+
+writeTail "$file_name"
+
+mv $file_name ../$file_name
+
+echo "File Name          : $file_name"
+echo "Size requested     : $size bytes"
+echo "Size created       : $accumulatedSize bytes"
+echo "Difference         : `expr $size - $accumulatedSize` bytes"
+
+#################### END ###########################
