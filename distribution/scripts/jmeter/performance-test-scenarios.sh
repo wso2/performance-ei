@@ -250,4 +250,14 @@ declare -A test_scenario24=(
     [use_backend]=true
     [skip]=false
 )
+declare -A test_scenario25=(
+    [name]="DirectHTTPSAPI"
+    [display_name]="Direct HTTPS API"
+    [description]="Passthrough API HTTPS service"
+    [path]="/directApi"
+    [jmx]="ei-test.jmx"
+    [protocol]="https"
+    [use_backend]=true
+    [skip]=false
+)
 
