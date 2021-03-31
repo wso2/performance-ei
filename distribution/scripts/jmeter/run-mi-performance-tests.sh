@@ -57,6 +57,9 @@ function before_execute_test_scenario() {
      elif [[ "${scenario[name]}" == "JsonToSOAPProxy" ]]; then
         jmeter_params+=("port=8290")
         jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_JSONPayload.json")
+    elif [[ "${scenario[name]}" == "DirectHTTPSAPI" ]]; then
+        jmeter_params+=("port=8253")
+        jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml") 
     else
         jmeter_params+=("port=8290")
         jmeter_params+=("payload=$HOME/jmeter/requests/${msize}B_buyStocks.xml")
