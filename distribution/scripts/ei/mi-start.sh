@@ -52,7 +52,7 @@ if [[ -z $heap_size ]]; then
 fi
 
 jvm_dir=""
-for dir in /usr/lib/jvm/jdk1.8*; do
+for dir in /usr/lib/jvm/jdk*; do
     [ -d "${dir}" ] && jvm_dir="${dir}" && break
 done
 export JAVA_HOME="${jvm_dir}"
@@ -90,7 +90,7 @@ echo "Setting Heap to ${heap_size}"
 export JVM_MEM_OPTS="-Xms${heap_size} -Xmx${heap_size}"
 
 echo "Enabling GC Logs"
-export JAVA_OPTS="-XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:$product_path/repository/logs/gc.log"
+export JAVA_OPTS="-XX:+PrintGC -XX:+PrintGCDetails -Xloggc:$product_path/repository/logs/gc.log"
 
 echo "Starting MI"
 $startup_script start -DenablePrometheusApi=true

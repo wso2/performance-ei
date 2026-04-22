@@ -136,7 +136,7 @@ function test_scenarios_with_iterate_elements() {
                             done
                         fi
 
-                        export JVM_ARGS="-Xms$jmeter_client_heap_size -Xmx$jmeter_client_heap_size -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:$report_location/jmeter_gc.log $JMETER_JVM_ARGS"
+                        export JVM_ARGS="-Xms$jmeter_client_heap_size -Xmx$jmeter_client_heap_size -XX:+PrintGC -XX:+PrintGCDetails -Xloggc:$report_location/jmeter_gc.log $JMETER_JVM_ARGS"
 
                         local jmeter_command="jmeter -n -t $script_dir/${jmx_file} -j $report_location/jmeter.log $jmeter_remote_args"
                         if [[ $jmeter_servers -gt 1 ]]; then
